@@ -17,6 +17,7 @@ accepts one.
 | `account` | — | — | `tier`, `credits.generation/dsp{cap, used, remaining}` |
 | `recipes` | `--name` | — | the recipe catalog |
 | `wait_task` / `check_task` | `--job-id` (or `--task-id` + `--kind`) | — | status / result + `artifacts[]` |
+| `list_jobs` / `cancel_job` | `--limit --kind --status` / `--job-id` | — | your jobs, newest first / the canceled job |
 | `get_upload_url` / `get_project_upload_url` | `--filename` | — | presigned `upload_url` + key (the CLI does this for you) |
 
 **Without MCP or the CLI** — the same jobs over plain HTTP (`X-API-Key` header):
@@ -29,7 +30,10 @@ GET  https://api.doseedo.com/api/jobs/<id>?wait=45    → repeat until status is
 ```
 
 Every kind, its input schema and price: `GET /api/jobs/kinds`; OpenAPI: `GET /api/jobs/openapi.json`.
-Errors are always `{error: {type, code, message, retryable}}` — retry only when `retryable` is true.
+Errors are always `{error: {type, code, message, retryable}}` — retry only when `retryable` is true,
+and **send the same `Idempotency-Key` on the retry** (then it can never start a second job).
+`GET /api/jobs` lists your jobs; `POST /api/jobs/<id>/cancel` stops one; add `"webhook": {"url": "https://…"}`
+to a submit to be called on completion (Standard Webhooks; the signing secret is in the create response).
 
 Session-control jobs (`list_sessions`, `get_session`, `edit_session`,
 `edit_ops_reference`, `download_session`, `bounce_session`, `desktop_status`,
