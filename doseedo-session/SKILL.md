@@ -1,5 +1,5 @@
 ---
-version: 0.1.0
+version: 0.1.1
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete
@@ -77,7 +77,13 @@ session IS the deliverable; don't build anything else to "show" it.
    recipe; don't discover op order by trial.
 4. `doseedo_edit_session` with ALL the ops in ONE call (up to 500, applied
    in order — `add_track`, `load_quick_sampler_sample`, `set_midi_notes`,
-   `set_channel_volume` for every track can go together).
+   `set_channel_volume` for every track can go together). **Always pass a
+   `batch_key`** (any stable id, e.g. `"drumkit-build-1"`): a call that
+   times out may have been stored, and re-sending with the same key dedups
+   instead of duplicating. Batches are **atomic by default** — one rejected
+   op means nothing was stored and the response lists every rejection with
+   a `code` (`unknown_op`, `forbidden_group`, `invalid`); fix and re-send
+   the whole batch with the same `batch_key`.
 5. `doseedo_download_session` → a no-auth download URL **plus a `replay`
    report** of what actually landed in the file (per track: sample, note
    count, region count; `deferred` ops; `warnings`). **Verify from `replay`,
@@ -140,5 +146,13 @@ cover, conversion, bounce) or the file is not on this machine (a phone):
 5. Live editing covers Logic Pro today. Building, reading and downloading
    cover Logic Pro and Ableton Live; for other DAWs, build for Logic and use
    doseedo-convert.
+6. **Respect the key's policy.** A `403 code=read_only_key` means the
+   connected key is read-only (`read:sessions`); `forbidden_group` means it
+   may not touch that op category (`ops:<group>` scopes). Don't retry — tell
+   the user which scope the key needs (`write:sessions`, or `ops:mixer` etc.)
+   and where to mint it (https://doseedo.com/settings/api-keys).
+7. **No undo group per batch.** The desktop applies stored ops one at a time;
+   a mid-batch failure leaves the earlier ops applied. Prefer one well-formed
+   atomic batch over many small calls, and verify from `replay`.
 
 Op groups and the recipe list: [references/session-ops.md](references/session-ops.md).

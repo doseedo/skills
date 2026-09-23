@@ -1,7 +1,7 @@
 # doseedo skills
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/version-0.1.1-green.svg)](./VERSION)
 
 Skills that let an AI coding agent (Claude Code, Cursor, Codex, anything
 that loads Markdown skills) make music with [doseedo](https://doseedo.com):
