@@ -1,5 +1,5 @@
 ---
-version: 0.1.1
+version: 0.1.2
 name: doseedo-convert
 description: |
   Convert a DAW project to another DAW with doseedo — Logic Pro, Ableton

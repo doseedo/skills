@@ -1,5 +1,5 @@
 ---
-version: 0.1.1
+version: 0.1.2
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
