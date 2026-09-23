@@ -1,0 +1,27 @@
+{
+  "name": "doseedo",
+  "version": "0.1.0",
+  "description": "doseedo skills for AI coding agents: stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control (Logic Pro via Dø Desktop), and DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase and Dorico.",
+  "author": {
+    "name": "doseedo",
+    "url": "https://doseedo.com"
+  },
+  "homepage": "https://doseedo.com/mcp",
+  "repository": "https://github.com/doseedo/skills",
+  "license": "MIT",
+  "keywords": [
+    "doseedo",
+    "music",
+    "audio",
+    "stems",
+    "stem-separation",
+    "daw",
+    "logic-pro",
+    "ableton",
+    "midi",
+    "transcription",
+    "music-generation",
+    "daw-conversion",
+    "mcp"
+  ]
+}

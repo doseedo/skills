@@ -1,0 +1,32 @@
+{
+  "name": "doseedo",
+  "owner": {
+    "name": "doseedo",
+    "url": "https://doseedo.com"
+  },
+  "plugins": [
+    {
+      "name": "doseedo",
+      "source": "./",
+      "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion via the doseedo CLI and MCP.",
+      "version": "0.1.0",
+      "skills": [
+        {
+          "name": "audio",
+          "path": "doseedo-audio",
+          "invoke": "/doseedo:audio"
+        },
+        {
+          "name": "session",
+          "path": "doseedo-session",
+          "invoke": "/doseedo:session"
+        },
+        {
+          "name": "convert",
+          "path": "doseedo-convert",
+          "invoke": "/doseedo:convert"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://cursor.com/schemas/cursor-plugin/plugin.json",
+  "name": "doseedo",
+  "displayName": "doseedo",
+  "version": "0.1.0",
+  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico) via the doseedo CLI and MCP.",
+  "author": {
+    "name": "doseedo",
+    "email": "support@doseedo.com"
+  },
+  "publisher": "doseedo",
+  "homepage": "https://doseedo.com/mcp",
+  "repository": "https://github.com/doseedo/skills",
+  "license": "MIT",
+  "category": "ai-content",
+  "keywords": [
+    "doseedo",
+    "music",
+    "audio",
+    "stems",
+    "daw",
+    "logic-pro",
+    "ableton",
+    "midi",
+    "transcription",
+    "music-generation",
+    "daw-conversion"
+  ]
+}

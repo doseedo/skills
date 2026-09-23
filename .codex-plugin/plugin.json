@@ -1,0 +1,47 @@
+{
+  "name": "doseedo",
+  "version": "0.1.0",
+  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico) via the doseedo CLI and MCP.",
+  "author": {
+    "name": "doseedo",
+    "email": "support@doseedo.com",
+    "url": "https://doseedo.com"
+  },
+  "homepage": "https://doseedo.com/mcp",
+  "repository": "https://github.com/doseedo/skills",
+  "license": "MIT",
+  "keywords": [
+    "doseedo",
+    "music",
+    "audio",
+    "stems",
+    "daw",
+    "logic-pro",
+    "ableton",
+    "midi",
+    "transcription",
+    "music-generation",
+    "daw-conversion"
+  ],
+  "skills": "./",
+  "interface": {
+    "displayName": "doseedo",
+    "shortDescription": "Stems, DAW sessions, covers and DAW conversion for your agent",
+    "longDescription": "doseedo turns a coding agent into a music production assistant: split any mix into stems with per-stem MIDI, turn a recording into a complete Logic Pro or Ableton session, re-perform a song as a cover, transcribe audio to notes, generate music from a prompt, build and edit DAW sessions live (Logic Pro via Dø Desktop, from anywhere), and convert projects between Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase and Dorico. Every job is one CLI call or one MCP tool, priced before it runs.",
+    "developerName": "doseedo",
+    "category": "Audio",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://doseedo.com",
+    "defaultPrompt": [
+      "Separate this song into stems",
+      "Turn this recording into a Logic Pro session with MIDI tracks",
+      "Cover this song with the piano swapped for electric guitar",
+      "Transcribe this sax solo to notes",
+      "Convert my Ableton project to Logic Pro",
+      "Build a drum kit session from the samples in this folder"
+    ]
+  }
+}

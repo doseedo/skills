@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# doseedo skills setup — first-time installation for Claude Code, Cursor, Codex.
+# Idempotent: safe to run multiple times.
+set -euo pipefail
+
+if [ -t 1 ] && command -v tput &>/dev/null && [ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]; then
+  GREEN=$(tput setaf 2) YELLOW=$(tput setaf 3) RED=$(tput setaf 1) BOLD=$(tput bold) RESET=$(tput sgr0)
+else
+  GREEN="" YELLOW="" RED="" BOLD="" RESET=""
+fi
+ok()   { echo "${GREEN}✓${RESET} $1"; }
+warn() { echo "${YELLOW}!${RESET} $1"; }
+err()  { echo "${RED}✗${RESET} $1"; }
+info() { echo "${BOLD}→${RESET} $1"; }
+
+SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ ! -f "$SKILL_DIR/VERSION" ] || [ ! -d "$SKILL_DIR/doseedo-audio" ]; then
+  err "Run this from the doseedo/skills repo root (VERSION and doseedo-audio/ not found)."
+  exit 1
+fi
+VERSION="$(tr -d '[:space:]' < "$SKILL_DIR/VERSION")"
+echo
+echo "${BOLD}doseedo skills setup — v$VERSION${RESET}"
+echo
+
+HOST_OVERRIDE=""; SKIP_CLI=0; SKIP_AUTH=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --host) shift; HOST_OVERRIDE="${1:-}"; shift ;;
+    --host=*) HOST_OVERRIDE="${1#--host=}"; shift ;;
+    --skip-cli) SKIP_CLI=1; shift ;;
+    --skip-auth) SKIP_AUTH=1; shift ;;
+    -h|--help)
+      cat <<EOF
+Usage: ./setup [--host claude|cursor|codex] [--skip-cli] [--skip-auth]
+Installs the skills for the detected agent, the doo CLI, and checks sign-in.
+EOF
+      exit 0 ;;
+    *) warn "Unknown flag: $1"; shift ;;
+  esac
+done
+
+detect_host() {
+  if [ -n "$HOST_OVERRIDE" ]; then echo "$HOST_OVERRIDE"; return; fi
+  if [ -d "$HOME/.claude" ]; then echo "claude"; return; fi
+  if [ -d "$HOME/.cursor" ]; then echo "cursor"; return; fi
+  if [ -d "$HOME/.codex" ]; then echo "codex"; return; fi
+  echo "unknown"
+}
+HOST="$(detect_host)"
+case "$HOST" in
+  claude) TARGET="$HOME/.claude/skills" ;;
+  cursor) TARGET="$HOME/.cursor/skills" ;;
+  codex)  TARGET="$HOME/.codex/skills" ;;
+  *) err "No agent detected (looked for ~/.claude, ~/.cursor, ~/.codex). Pass --host."; exit 1 ;;
+esac
+info "Agent: $HOST → $TARGET"
+
+# ── skills ───────────────────────────────────────────────────────────────
+mkdir -p "$TARGET"
+for d in "$SKILL_DIR"/doseedo-*/; do
+  name="$(basename "$d")"
+  dest="$TARGET/$name"
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "${d%/}" ]; then
+    ok "$name already linked"
+  elif [ -e "$dest" ]; then
+    rm -rf "$dest"; ln -s "${d%/}" "$dest"; ok "$name relinked"
+  else
+    ln -s "${d%/}" "$dest"; ok "$name linked"
+  fi
+done
+
+# ── CLI ──────────────────────────────────────────────────────────────────
+if [ "$SKIP_CLI" -eq 0 ]; then
+  if command -v doo &>/dev/null; then
+    ok "doo CLI present ($(doo version 2>/dev/null || echo '?'))"
+  elif command -v npm &>/dev/null; then
+    info "Installing @doseedo/cli…"
+    if npm install -g @doseedo/cli >/dev/null 2>&1; then ok "doo CLI installed"; else
+      warn "npm install -g @doseedo/cli failed — install Node ≥ 20 and retry, or see https://doseedo.com/mcp"
+    fi
+  else
+    warn "npm not found — install Node ≥ 20, then: npm install -g @doseedo/cli"
+  fi
+fi
+
+# ── auth ─────────────────────────────────────────────────────────────────
+if [ "$SKIP_AUTH" -eq 0 ] && command -v doo &>/dev/null; then
+  if doo whoami >/dev/null 2>&1; then ok "signed in ($(doo whoami 2>/dev/null | head -1))"; else
+    warn "not signed in — run: doo login   (or export DOO_API_KEY=dsk_live_…)"
+  fi
+fi
+
+echo
+ok "Done. Try: ask your agent to \"separate this song into stems\" with a local file."
+echo "   Live DAW control also wants the MCP: claude mcp add --transport http --scope user doseedo https://api.doseedo.com/mcp"
