@@ -14,7 +14,7 @@ accepts one.
 | `audio_to_session` | `--target logic\|ableton`, `--midi-stems`, `--chords`, `--simple`, `--stem-mode 6stem\|drumsep\|detect`, `--separate false`, `--tempo-map false`, `--crop-silence`, `--loops`, `--drum-sampler`, `--name` | `session` | `file` (zip), `summary` |
 | `convert_project` | `--direction <src>2<dst>` (file = the project) | `convert` | `file` (zip) |
 | `quote` | `--job`, `--args '{…}'` | — | `estimate{generation\|dsp\|convert}`, `affordable`, `account` |
-| `account` | — | — | `tier`, `credits.generation/dsp{cap, used, remaining}` |
+| `account` | — | — | `tier`, `credits.generation.monthly{cap, used, remaining}` (the ONE pool), `credits.generation.packs.balance`, `storage` |
 | `recipes` | `--name` | — | the recipe catalog |
 | `wait_task` / `check_task` | `--job-id` (or `--task-id` + `--kind`) | — | status / result + `artifacts[]` |
 | `list_jobs` / `cancel_job` | `--limit --kind --status` / `--job-id` | — | your jobs, newest first / the canceled job |
@@ -42,11 +42,11 @@ Session-control jobs (`list_sessions`, `get_session`, `edit_session`,
 
 ## Budgets
 
-- **generation** — GPU jobs: 1 credit ≙ one 30 s generation window.
-  stems 1 (orchestra/detect up to 8), cover 4, generate ⌈windows⌉.
-- **dsp** — CPU jobs: transcribe 1, audio_to_session 1 (+ the separation it
-  runs on the GPU plane).
-- **convert** — the monthly conversion allowance.
+- **generation** — the ONE monthly credit pool: 10 credits ≙ one 30 s generation
+  window; stems 20 (orchestra/detect up to 80), cover 40, transcription 2, a DAW
+  conversion 1 (+1 per GB past the first). Extra usage (purchased) is drawn after.
+- **dsp** — sound tools (CPU): no credits, a hidden daily fair-use cap.
+  audio_to_session's build is here; its separation draws the credit pool.
 
 `doo cost <job> [--flags]` = `doseedo_quote`: an estimate from the planes'
 own table plus the account's remaining balance. The gate is authoritative; a

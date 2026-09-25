@@ -57,7 +57,7 @@ doo session song.wav --midi-stems piano,bass          # + MIDI tracks for those 
 doo session song.wav --simple                         # meter + tempo + stems only, faster
 ```
 
-Cost: 1 DSP credit + 1 generation credit (the separation). Time ~4 min — run
+Cost: 20 credits (the separation; the session build itself is free). Time ~4 min — run
 with a 10-minute tool timeout, or `--no-wait` then `doo wait <task_id> --kind session`.
 
 Result: `session_<name>/<Name>.logicx.zip` (or `.als` zip) + a `summary`

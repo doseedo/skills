@@ -37,7 +37,7 @@ doo convert score.mxl --to logic                  # MusicXML (from Dorico) → L
 `--to` defaults to the "other" flagship DAW (Ableton → Logic, everything
 else → Logic). Output lands next to you as `<name>.logicx.zip`, `<name>.als`,
 `<name> FL.zip`, `<name> REAPER.zip`, `<name> Pro Tools.zip`; unzip and open.
-Cost: one conversion from the monthly allowance (paid plans: 1,000+). Time
+Cost: 1 credit (+1 per GB past the first) from the monthly credit pool. Time
 15 s – 2 min; multi-GB sessions are fine (the bundle streams, no size cap).
 
 ## What to pass — this decides whether audio travels

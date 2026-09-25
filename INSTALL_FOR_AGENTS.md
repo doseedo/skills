@@ -71,7 +71,7 @@ Then, with a short audio file the user provides:
 doo transcribe <file> --json | head -c 400
 ```
 
-(1 DSP credit, ~30 s.) A `notes` array in the output means the whole chain
+(up to 2 credits, ~30 s.) A `notes` array in the output means the whole chain
 — upload, submit, wait, result — works.
 
 ## If anything fails

@@ -29,19 +29,19 @@ command per deliverable; the result is files on disk plus a verify hint.
    (interactive: it opens a browser) and wait for their confirmation. A
    headless alternative is `export DOO_API_KEY=dsk_live_…` from
    https://doseedo.com/settings/api-keys.
-3. `doo account` — tier and remaining credits (free: a daily allowance and a
-   monthly ceiling; paid: unlimited generation).
+3. `doo account` — tier, the monthly credit pool (every tool draws it: free
+   120, Pro 2,000), purchased extra-usage credits, and storage.
 
 ## Pick the recipe
 
 | The user wants | Run | Cost · time |
 |---|---|---|
-| stems, an acapella / instrumental, one instrument isolated | `doo stems <audio>` | 1 credit · ~2 min |
+| stems, an acapella / instrumental, one instrument isolated | `doo stems <audio>` | 20 credits · ~2 min |
 | orchestral / horn / named instruments out of a mix | `doo stems <audio> --models orchestra --instruments "saxophone,trumpet"` | 1 + ⌈n/8⌉ · ~2–4 min |
-| the same song re-performed, instruments swapped, new lyrics | `doo cover <audio> [--instruments '{"piano":"electric_guitar"}'] [--lyrics …]` | 4 credits · 3–8 min |
-| the notes of a clip (JSON: pitch, onset, offset, velocity) | `doo transcribe <audio or https URL> [--instrument sax] [--tempo-bpm 120]` | 1 DSP credit · 15–60 s |
-| a new track from a description | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 1 credit per 30 s · 1–3 min |
-| the user's OWN MIDI rendered as an instrument | `doo generate --midi part.mid -i trombone --out part.wav` | 1 credit per 30 s |
+| the same song re-performed, instruments swapped, new lyrics | `doo cover <audio> [--instruments '{"piano":"electric_guitar"}'] [--lyrics …]` | 40 credits · 3–8 min |
+| the notes of a clip (JSON: pitch, onset, offset, velocity) | `doo transcribe <audio or https URL> [--instrument sax] [--tempo-bpm 120]` | up to 2 credits · 15–60 s |
+| a new track from a description | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 10 credits per 30 s · 1–3 min |
+| the user's OWN MIDI rendered as an instrument | `doo generate --midi part.mid -i trombone --out part.wav` | 10 credits per 30 s |
 | a full DAW session from a mix | → doseedo-session (`doo session`) | |
 
 `doo recipes` prints this list from the server; `doo recipes get <name>`
