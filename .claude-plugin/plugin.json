@@ -1,6 +1,6 @@
 {
   "name": "doseedo",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "doseedo skills for AI coding agents: stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control (Logic Pro via Dø Desktop), and DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase and Dorico.",
   "author": {
     "name": "doseedo",
