@@ -38,7 +38,9 @@ doo convert score.mxl --to logic                  # MusicXML (from Dorico) → L
 else → Logic). Output lands next to you as `<name>.logicx.zip`, `<name>.als`,
 `<name> FL.zip`, `<name> REAPER.zip`, `<name> Pro Tools.zip`; unzip and open.
 Cost: 1 credit (+1 per GB past the first) from the monthly credit pool. Time
-15 s – 2 min; multi-GB sessions are fine (the bundle streams, no size cap).
+15 s – 2 min; multi-GB sessions are fine (the bundle streams) up to the
+plan's size cap — guest/free 2 GB, paid 12 GB; beyond that, Dø Desktop
+converts locally with no upload.
 
 ## What to pass — this decides whether audio travels
 
@@ -77,14 +79,38 @@ Details: [references/formats.md](references/formats.md).
 `doseedo_get_project_upload_url {filename}` → `curl -X PUT --data-binary
 @project.zip "<upload_url>"` → `doseedo_convert_project {project_key,
 direction: "ableton2logic"}` → `doseedo_wait_task kind="convert"` → `curl -OJ`
-the result URL. Directions are `<source>2<target>` over logic | ableton |
-fl | protools | reaper | cubase | dorico. Zip a project FOLDER so its audio
-travels.
+the result `file` URL (a direct storage link — no proxy, multi-GB safe).
+Directions are `<source>2<target>` over logic | ableton | fl | protools |
+reaper | cubase | dorico, `auto2<target>` to let the server detect the
+source, or `<daw>2<daw>` to rebuild a project in its own format (e.g. with
+`options.third_party_plugins:"disable"`). Zip a project FOLDER so its audio
+travels. Pass `size_bytes` to the upload tool: past 4 GB it hands you a
+multipart upload (`split -b <part_size>`, PUT each part, then
+`doseedo_complete_project_upload`). The finished task carries the transfer
+report PARSED — `lossy`, `summary[]` (what changed), `warnings[]` (before
+opening), `report_url` — relay every line; a missing report is not
+"lossless".
+
+## Edit a project, not just convert it
+
+`doseedo_import_project {project_key}` → a `session_id` for the session
+tools (tempo, meter, markers, every track with its MIDI, level and pan;
+audio files are LISTED with their clip positions, not carried — the result's
+`audio.next` says how to supply them). Edit with `doseedo_edit_session`,
+save with `doseedo_download_session` (native Logic), and for another DAW
+upload that download and run `doseedo_convert_project logic2<target>` — the
+converter takes an uploaded project, never a session_id. Recipe:
+`doseedo_recipes {name:"import-edit-export"}`.
 
 ## Failures
 
-`503` — the converter is cold-starting; retry in a moment. `413` — over the
-upload limit for this route (use the CLI, which streams). `429` — the
-monthly conversion allowance is used up; the message names the reset and
+`503` — the converter is cold-starting; retry in a moment. `project_too_large`
+(HTTP 413) — the project is over the SIZE cap of the plan (guest/free 2 GB,
+paid 12 GB); the message carries the cap and an upgrade link. The CLI and the
+web share that cap — the way around it is local conversion in Dø Desktop
+(https://doseedo.com/downloads), the way up is the plan. `429` — the monthly
+allowance is used up; the message names the reset and
 https://doseedo.com/plans. `400 could not read the project` — wrong input
-kind (see the table above).
+kind (see the table above). `400 invalid_direction` — the error lists the
+directions the server accepts. Quote the `support_code` when a failure
+carries one.
