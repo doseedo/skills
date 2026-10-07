@@ -1,5 +1,5 @@
 ---
-version: 0.1.4
+version: 0.1.5
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete
@@ -109,14 +109,21 @@ instrument) → `load_quick_sampler_sample {track_id, sample_path: "/abs/file.wa
 Audio regions from a local file: `attach_audio {track_id, local_path,
 audio_info, start_beats}` or N hits with `set_track_clips` — `audio_info`
 (sample_rate, frame_count, channels, bits_per_sample, bytes) is read from the
-file header locally. The download then returns `place_local_files`: `cp`
-commands that drop each file into the unzipped bundle — REQUIRED, or the
-samplers open empty. Full recipe: [references/local-samples.md](references/local-samples.md).
+file header locally. `attach_audio` REPLACES the track's primary region (it
+does not stack); use `set_track_clips` for several regions. The download then
+returns `place_local_files`: `cp` commands that drop each file into the
+unzipped bundle — run EVERY one after unzipping, exactly as given, for local
+samples AND local audio regions, or those tracks open empty. A `replay`
+track with `audio_source: "place_local_files"` or a "NOT bundled" warning is
+action-required, not informational. Local paths are
+not limited by plan. Full recipe: [references/local-samples.md](references/local-samples.md).
 
 Upload ONLY when the server must read the audio (separation, transcription,
 cover, conversion, bounce) or the file is not on this machine (a phone):
 `doseedo_get_upload_url` → `curl -X PUT` → `doseedo_add_audio_to_session
 {audio_key}` → sha256 → `load_quick_sampler_sample {sample_path: "<sha256>"}`.
+Audio stored in a session stays lossless (WAV/AIFF/FLAC) only on Pro+; below
+Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
 
 ### Plugins, live vs offline, bounce
 
@@ -125,7 +132,17 @@ cover, conversion, bounce) or the file is not on this machine (a phone):
   desktop is connected, what is installed on the user's Mac.
 - `doseedo_desktop_status`: is Dø Desktop running with Logic connected? If
   yes, edits reach the open project within seconds; if not, they persist and
-  land in the next download or open. Download never needs the desktop.
+  land in the next download or open. Download never needs the desktop. When
+  it is not connected the result carries `guidance`: the macOS app's
+  download page, whether the user's plan includes it (Pro and up, else a
+  one-time licence), how to pair it (install → Sign in → keep it running with
+  Logic open), and what works without it. Relay that — **never drive the
+  user's screen** (no clicking in Logic, no GUI scripting) as a substitute;
+  hand over the downloaded project instead.
+- Housekeeping: `doseedo_list_sessions {limit, offset, name_contains}` pages
+  (read `next_offset`); `doseedo_delete_sessions` soft-deletes by ids or
+  filters — it is a DRY RUN unless `confirm: true`: show the user the
+  matched count first, delete only after they agree.
   `replay.deferred` lists ops the offline build could not synthesize —
   rebuild those with a supported op or accept that they apply live; don't
   re-export blindly.
@@ -143,15 +160,20 @@ cover, conversion, bounce) or the file is not on this machine (a phone):
    ops reference. An op the catalog doesn't list doesn't exist.
 4. Say what actually landed. `replay` and `warnings` are the truth; "the
    call returned 200" is not.
-5. Live editing covers Logic Pro today. Building, reading and downloading
+5. **A part in a key / at the session tempo is YOUR MIDI.** `tempo_bpm` and
+   `time_signature` come from `get_session` (there is no key field — ask, or
+   transcribe a pitched stem). Write the notes yourself and place them with
+   `set_midi_notes` on an instrument track; to hear them as AI audio, see
+   doseedo-audio ("render your own MIDI"). Prompt generation cannot hit a key.
+6. Live editing covers Logic Pro today. Building, reading and downloading
    cover Logic Pro and Ableton Live; for other DAWs, build for Logic and use
    doseedo-convert.
-6. **Respect the key's policy.** A `403 code=read_only_key` means the
+7. **Respect the key's policy.** A `403 code=read_only_key` means the
    connected key is read-only (`read:sessions`); `forbidden_group` means it
    may not touch that op category (`ops:<group>` scopes). Don't retry — tell
    the user which scope the key needs (`write:sessions`, or `ops:mixer` etc.)
    and where to mint it (https://doseedo.com/settings/api-keys).
-7. **No undo group per batch.** The desktop applies stored ops one at a time;
+8. **No undo group per batch.** The desktop applies stored ops one at a time;
    a mid-batch failure leaves the earlier ops applied. Prefer one well-formed
    atomic batch over many small calls, and verify from `replay`.
 

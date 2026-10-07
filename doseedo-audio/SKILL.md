@@ -1,5 +1,5 @@
 ---
-version: 0.1.4
+version: 0.1.5
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
@@ -40,8 +40,8 @@ command per deliverable; the result is files on disk plus a verify hint.
 | orchestral / horn / named instruments out of a mix | `doo stems <audio> --models orchestra --instruments "saxophone,trumpet"` | 1 + ⌈n/8⌉ · ~2–4 min |
 | the same song re-performed, instruments swapped, new lyrics | `doo cover <audio> [--instruments '{"piano":"electric_guitar"}'] [--lyrics …]` | 40 credits · 3–8 min |
 | the notes of a clip (JSON: pitch, onset, offset, velocity) | `doo transcribe <audio or https URL> [--instrument sax] [--tempo-bpm 120]` | up to 2 credits · 15–60 s |
-| a new track from a description | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 10 credits per 30 s · 1–3 min |
-| the user's OWN MIDI rendered as an instrument | `doo generate --midi part.mid -i trombone --out part.wav` | 10 credits per 30 s |
+| a new track from a description (style/mood — NOT a key or exact tempo) | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 10 credits per 30 s · 1–3 min |
+| a part in a given key / at a session's tempo, or MIDI rendered as an instrument | write the MIDI yourself, then `doo generate --midi part.mid -i trombone --out part.wav` (see "Key, tempo and takes") | 10 credits per 30 s |
 | a full DAW session from a mix | → doseedo-session (`doo session`) | |
 
 `doo recipes` prints this list from the server; `doo recipes get <name>`
@@ -74,6 +74,37 @@ every underlying job and `doo run <job> [--opt v] [file]` runs one directly
    asked.** `--models auto` adapts the stem set; `orchestra` needs
    `--instruments`; `detect` picks from the orchestra bank and refunds what
    it skips.
+
+## Key, tempo and takes
+
+- **Prompt generation does not take a key, and `--bpm` is only a caption
+  hint** (the output can drift from it). Never promise "in D minor at 92 BPM"
+  from a prompt.
+- **For a part that must fit a key and tempo, YOU write the MIDI**: get the
+  tempo (and the key — from the user, or by transcribing a pitched stem and
+  reading its pitch classes), compose the notes in that key at that tempo,
+  save `part.mid` (tempo meta = the session tempo), then render it:
+  `doo generate --midi part.mid -i <instrument>` (instrument ids:
+  `curl https://api.doseedo.com/api/instruments`). Keep one voice per part.
+  The same call without the CLI: `curl -X POST
+  https://api.doseedo.com/api/generate-stemphonic -H "X-API-Key: $DOO_API_KEY"
+  -F midiFile=@part.mid -F instrument=<id> -F prompt=<id> -F duration=<s>
+  -F bpm=<tempo> -F lyrics="[Instrumental]"` → poll the task (kind
+  `generate`) — the result lists every take.
+- **Several takes come back** for a pitched one-voice MIDI part (best-first
+  by a scorer; the CLI saves the top one). The model sometimes misses or
+  changes a note — expected. Hand the user the takes, or pick one by
+  listening / transcribing each and comparing against the notes you sent,
+  and say how you chose.
+- **Covers re-play transcribed notes**: an instrument swap transcribes the
+  stem and re-performs it, so small note differences from the source are
+  normal. Read `result.cover.instrument_swaps`, offer the result to judge.
+  Knobs on `doo cover`: `--swap-cns 0–1` (how far a swapped stem may
+  depart, default 0.35), `--regen all|<stems>` (default: only swapped stems
+  regenerate); via `doo run cover_song`: also `--labels
+  '{"other":"trumpet"}'` (fix a mislabelled stem) and `--midi-only`.
+- Generate/cover file URLs are owner-checked: download them with the
+  `X-API-Key` header (the CLI does).
 
 ## Examples
 

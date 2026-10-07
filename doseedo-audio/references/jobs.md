@@ -8,9 +8,9 @@ accepts one.
 | job | options | async kind | result |
 |---|---|---|---|
 | `separate_stems` | `--models 6stem\|auto\|orchestra\|detect`, `--instruments "a,b"`, `--include-midi false`, `--export logic\|ableton` | `separate` | `stems{name: url}`, `midi{name: url}`, `session_url` |
-| `cover_song` | `--instruments '{"piano":"electric_guitar"}'`, `--lyrics`, `--cover-noise-strength 0–1`, `--export logic\|ableton` | `cover` | `files[]`, `cover{duration, windowed, stems, instrument_swaps}` |
+| `cover_song` | `--instruments '{"piano":"electric_guitar"}'`, `--lyrics`, `--cover-noise-strength 0–1`, `--swap-cns 0–1`, `--regen all\|<stems>`, `--labels '{"other":"trumpet"}'`, `--midi-only`, `--export logic\|ableton` | `cover` | `files[]`, `cover{duration, windowed, stems, instrument_swaps}` |
 | `transcribe` | `--instrument`, `--tempo-bpm`, `--register`, `--polyphony solo\|poly\|section`, `--roster`, `--strikes` (file or `--audio-url`) | `transcribe` | `backend`, `result.notes[{pitch, onset, offset, velocity, confidence}]` |
-| `generate_music` | `--prompt` (required), `--lyrics`, `--duration-seconds`, `--bpm`, `--time-signature`, `--seed` | `generate` | `files[]`, `duration` |
+| `generate_music` | `--prompt` (required), `--lyrics`, `--duration-seconds`, `--bpm` (caption hint), `--time-signature` (hint), `--seed` — no key, no MIDI (MIDI: `doo generate --midi`) | `generate` | `files[]`, `duration` |
 | `audio_to_session` | `--target logic\|ableton`, `--midi-stems`, `--chords`, `--simple`, `--stem-mode 6stem\|drumsep\|detect`, `--separate false`, `--tempo-map false`, `--crop-silence`, `--loops`, `--drum-sampler`, `--name` | `session` | `file` (zip), `summary` |
 | `convert_project` | `--direction <src>2<dst>` (file = the project) | `convert` | `file` (zip) |
 | `quote` | `--job`, `--args '{…}'` | — | `estimate{generation\|dsp\|convert}`, `affordable`, `account` |
@@ -64,5 +64,7 @@ refusal names the exact price. Failed jobs are refunded.
 }
 ```
 
-Artifact URLs are downloadable without auth (the unguessable task id is the
-capability); `?format=opus` on an audio URL gives a compressed copy.
+Presigned artifact URLs (stems, sessions, exports) download without auth;
+generation and cover files (`/api/generate-stemphonic/download/…`) are
+owner-checked — send `X-API-Key: $DOO_API_KEY` (the CLI does).
+`?format=opus` on an audio URL gives a compressed copy.
