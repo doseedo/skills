@@ -64,7 +64,7 @@ refusal names the exact price. Failed jobs are refunded.
 }
 ```
 
-Presigned artifact URLs (stems, sessions, exports) download without auth;
-generation and cover files (`/api/generate-stemphonic/download/…`) are
-owner-checked — send `X-API-Key: $DOO_API_KEY` (the CLI does).
+Every artifact URL is a pre-signed link (`https://api.doseedo.com/api/files/…`)
+that downloads with no auth header until its `expires_at` (24 h) — generate and
+cover takes included. Read the job again for fresh links after that.
 `?format=opus` on an audio URL gives a compressed copy.

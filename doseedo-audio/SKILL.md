@@ -103,8 +103,9 @@ every underlying job and `doo run <job> [--opt v] [file]` runs one directly
   depart, default 0.35), `--regen all|<stems>` (default: only swapped stems
   regenerate); via `doo run cover_song`: also `--labels
   '{"other":"trumpet"}'` (fix a mislabelled stem) and `--midi-only`.
-- Generate/cover file URLs are owner-checked: download them with the
-  `X-API-Key` header (the CLI does).
+- Every result URL is a pre-signed link: a plain `curl -OJ <url>` downloads
+  it with no auth header until its `expires_at` (24 h). Pass a result URL
+  straight to `transcribe` as `audio_url`.
 
 ## Examples
 
