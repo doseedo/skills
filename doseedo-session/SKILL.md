@@ -1,5 +1,5 @@
 ---
-version: 0.1.6
+version: 0.1.7
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete
@@ -71,6 +71,16 @@ session IS the deliverable; don't build anything else to "show" it.
 2. `doseedo_get_session` → every track's ids (`track_id t_…`, its mixer strip
    `channel_id ch_…`), regions in beats AND seconds, mixer in dB, plugins,
    tempo, markers, and a `sync` block (is the desktop live? how far behind?).
+   It is the WHOLE session (blocks omitted when empty): `plugins[].params
+   [{param_id, name, value}]` — `set_device_param` needs that `param_id`
+   (`set_device_params_batch` takes `param_id` or `id`); `markers[].marker_id`
+   with `beat` ABSOLUTE from bar 1 (`rename/move/delete_marker` take it);
+   `sends[]` / `output` as `ch_b_…` ids; `tempo_map[]`, `meter_map[]`,
+   `key_signature {tonic, mode, fifths}` (Logic-synced sessions only — an
+   MCP-built session has no key and no key op yet: `doo analyze-song` a
+   reference for one); `automation[]` lanes with points; per region `midi_cc`,
+   `pitch_bend`, `fades_ms` / `fades_beats`, `loop`, `clip_id`; per track
+   `instrument {name, patch, format, samples}`; `counts`, `length_beats`.
 3. `doseedo_edit_ops_reference` — **once per session**: the op catalog with
    args and units, the workflow, and **recipes** (drum kit from local samples,
    one-shots on an audio track, remote sample, submix bus, verify). Copy a
