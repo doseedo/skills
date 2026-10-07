@@ -16,7 +16,7 @@ territory. Every op has `args`, a `group`, and `applies`:
 |---|---|---|
 | project | tempo, meter | — |
 | tracks | add / rename / delete / reorder tracks | `track_id t_…` |
-| regions | audio regions (`attach_audio`, `set_track_clips`), MIDI notes (`set_midi_notes`), sampler content (`load_quick_sampler_sample`) | `track_id` |
+| regions | audio regions (`attach_audio`, `set_track_clips`), MIDI notes (`set_midi_notes`, `edit_midi_notes`), sampler content (`load_quick_sampler_sample` — whole sample by default; `mode`, `sample_start_seconds`/`sample_end_seconds`) | `track_id` |
 | mixer | faders, pans, mutes, sends, buses (`add_channel role=submix\|return`, `set_channel_output`) | `channel_id ch_…` / `ch_b_…` |
 | plugins | device chains on a strip (`add_device {device:{name}}`, slot) | `channel_id` + slot |
 | automation | envelopes | `track_id` / `channel_id` |
@@ -27,9 +27,14 @@ territory. Every op has `args`, a `group`, and `applies`:
 
 1. **Drum kit in Quick Sampler from files on the user's Mac** — no upload, no
    desktop: `set_tempo` → per drum `add_track {content_type:"instrument",
-   auto_channel:true}` → `load_quick_sampler_sample {sample_path:"/abs/kick.wav"}`
-   → `set_midi_notes` (pitch 60) → `set_channel_volume 0.709`; download; run
-   every `place_local_files` command.
+   auto_channel:true}` → `load_quick_sampler_sample {sample_path:"/abs/kick.wav",
+   audio_info}` → `set_midi_notes` (pitch 60, long enough to cover the sample —
+   or `mode:"one_shot"`) → `set_channel_volume 0.709`; download; run every
+   `place_local_files` command.
+1b. **Fix note lengths on a sampler track** — `doseedo_get_session` (each
+   sampler's `plays_beats`, each region's notes with `i`) → `edit_midi_notes
+   {track_id, legato:true, max_duration_beats:<plays_beats>}`; stored as the
+   equivalent `set_midi_notes`.
 2. **One-shots as audio regions on an audio track** — `add_track
    {content_type:"audio"}` → `set_track_clips` with `audio_ref {local_path,
    audio_info}` per hit.
@@ -40,7 +45,7 @@ territory. Every op has `args`, a `group`, and `applies`:
    `set_channel_output {channel_id:"ch_<member>", target_channel_id:"ch_b_…"}`
    per member → `set_channel_volume`.
 5. **Verify without unzipping** — `doseedo_download_session` → read
-   `replay.tracks[*].sampler_sample / midi_notes / audio_regions`,
+   `replay.tracks[*].sampler_sample / sampler / midi_notes / audio_regions`,
    `replay.deferred`, `warnings`; only then curl + unzip.
 
 ## Batching

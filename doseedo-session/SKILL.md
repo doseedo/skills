@@ -105,7 +105,12 @@ session IS the deliverable; don't build anything else to "show" it.
 
 For a drum pack or one-shot already on the user's disk, pass its LOCAL PATH:
 `add_track {content_type: "instrument"}` (Quick Sampler is the default
-instrument) → `load_quick_sampler_sample {track_id, sample_path: "/abs/file.wav"}`.
+instrument) → `load_quick_sampler_sample {track_id, sample_path: "/abs/file.wav",
+audio_info}` (`audio_info` is required for a local sample: the sampler plays the
+whole file and needs its length; `mode: "one_shot"` for hits that should always
+ring out). In the default `classic` mode a sample stops at note-off — size notes
+to the sampler's `plays_beats` from `doseedo_get_session`, or fix them later with
+`edit_midi_notes` (legato / duration_beats on a selection; no re-sending).
 Audio regions from a local file: `attach_audio {track_id, local_path,
 audio_info, start_beats}` or N hits with `set_track_clips` — `audio_info`
 (sample_rate, frame_count, channels, bits_per_sample, bytes) is read from the
