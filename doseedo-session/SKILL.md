@@ -1,5 +1,5 @@
 ---
-version: 0.1.7
+version: 0.1.8
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete
@@ -70,21 +70,28 @@ session IS the deliverable; don't build anything else to "show" it.
 1. `doseedo_list_sessions` (or `doseedo_create_session {name}`) → `session_id`.
 2. `doseedo_get_session` → every track's ids (`track_id t_…`, its mixer strip
    `channel_id ch_…`), regions in beats AND seconds, mixer in dB, plugins,
-   tempo, markers, and a `sync` block (is the desktop live? how far behind?).
-   It is the WHOLE session (blocks omitted when empty): `plugins[].params
-   [{param_id, name, value}]` — `set_device_param` needs that `param_id`
-   (`set_device_params_batch` takes `param_id` or `id`); `markers[].marker_id`
-   with `beat` ABSOLUTE from bar 1 (`rename/move/delete_marker` take it);
-   `sends[]` / `output` as `ch_b_…` ids; `tempo_map[]`, `meter_map[]`,
-   `key_signature {tonic, mode, fifths}` (Logic-synced sessions only — an
-   MCP-built session has no key and no key op yet: `doo analyze-song` a
-   reference for one); `automation[]` lanes with points; per region `midi_cc`,
-   `pitch_bend`, `fades_ms` / `fades_beats`, `loop`, `clip_id`; per track
-   `instrument {name, patch, format, samples}`; `counts`, `length_beats`.
-3. `doseedo_edit_ops_reference` — **once per session**: the op catalog with
-   args and units, the workflow, and **recipes** (drum kit from local samples,
-   one-shots on an audio track, remote sample, submix bus, verify). Copy a
-   recipe; don't discover op order by trial.
+   tempo, markers, `key_signature` when the session knows it, and a `sync`
+   block with **`live_edits: true|false` + `live_edits_reason`** (will an edit
+   reach Logic now?). It is the WHOLE session (blocks omitted when empty):
+   `plugins[].params [{param_id, name, value}]` — `set_device_param` needs
+   that `param_id`; `markers[].marker_id` with `beat` ABSOLUTE from bar 1;
+   `sends[]` / `output` as `ch_b_…` ids; `tempo_map[]`, `meter_map[]`;
+   `automation[]`; per region `midi_cc`, `pitch_bend`, fades, `loop`,
+   `clip_id`; per track `instrument`; `counts`, `length_beats`. **Budget:** a
+   big session comes back shaped, never cut — notes are inline only while the
+   selected tracks hold ≤200 notes (else regions carry `note_count` +
+   `notes_omitted: true`): read one track's notes with `{session_id, tracks:
+   [t_…], include_notes: true}`; `include_params: false` /
+   `include_automation: false` drop the bulky blocks; a `truncated` + `next`
+   pair means "call again with these args for the remaining tracks".
+   Field-by-field map: `doseedo_edit_ops_reference {section: "summary"}`.
+3. `doseedo_edit_ops_reference` — **once per session**, no args: the index
+   (units, ids, every op with a one-line summary, the recipe names). Then
+   fetch only what you need: `{op: "load_quick_sampler_sample"}` for an op's
+   full args, `{section: "recipes"}` for the recipes (drum kit from local
+   samples, fix note lengths, one-shots on an audio track, remote sample,
+   submix bus, verify). Copy a recipe; don't discover op order by trial. An
+   unknown op name gets `did_you_mean`.
 4. `doseedo_edit_session` with ALL the ops in ONE call (up to 500, applied
    in order — `add_track`, `load_quick_sampler_sample`, `set_midi_notes`,
    `set_channel_volume` for every track can go together). **Always pass a
@@ -92,8 +99,10 @@ session IS the deliverable; don't build anything else to "show" it.
    times out may have been stored, and re-sending with the same key dedups
    instead of duplicating. Batches are **atomic by default** — one rejected
    op means nothing was stored and the response lists every rejection with
-   a `code` (`unknown_op`, `forbidden_group`, `invalid`); fix and re-send
-   the whole batch with the same `batch_key`.
+   a `code` and a `reason` — `unknown_op` / `unknown_plugin` (with
+   `did_you_mean`), `unknown_id` (with the valid ids), `duplicate_id`,
+   `forbidden_group`, `read_only_key`; fix and re-send the whole batch with
+   the same `batch_key`.
 5. `doseedo_download_session` → a no-auth download URL **plus a `replay`
    report** of what actually landed in the file (per track: sample, note
    count, region count; `deferred` ops; `warnings`). **Verify from `replay`,
@@ -102,12 +111,18 @@ session IS the deliverable; don't build anything else to "show" it.
 
 ### IDs & units (get these right)
 
-- Mint new ids as 12 random lowercase hex: track `t_<hex>`, its strip
-  `ch_<same hex>`, bus `ch_b_<hex>`, marker `m_<hex>`.
+- Mint new ids as 12 random lowercase hex, and on `add_track` ALWAYS pass
+  both `track_id: "t_<hex>"` and `channel_id: "ch_<same hex>"` (the strip is
+  optional on the wire, but minting both up front is what lets the rest of
+  the batch target the strip). Bus `ch_b_<hex>`, marker `m_<hex>`. Every
+  other id (`param_id`, `marker_id`, `clip_id`, `pointee_id`) comes from
+  `get_session` — never invented.
 - Beats are absolute from bar 1 (beat 0 = bar 1) at the project tempo; one
   bar of 4/4 = 4 beats.
 - Faders: `set_channel_volume value 0.709` = 0 dB (unity). A new track
   defaults to 1.0 = +6 dB — set 0.709 explicitly.
+- Sends: `level 1 = unity` (linear 0–2); `level_raw` 0–127 where an op
+  offers it.
 - Quick Sampler plays a loaded one-shot at its recorded pitch on C3 = MIDI 60:
   drum hits at pitch 60, a tuned 808 line relative to 60.
 
@@ -145,9 +160,11 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
 - Plugins insert BY NAME: `add_device {channel_id, device: {name: "Channel EQ"}}`
   — no AU codes. `doseedo_list_plugins` shows the stock palette and, when the
   desktop is connected, what is installed on the user's Mac.
-- `doseedo_desktop_status`: is Dø Desktop running with Logic connected? If
-  yes, edits reach the open project within seconds; if not, they persist and
-  land in the next download or open. Download never needs the desktop. When
+- `doseedo_desktop_status`: `live_edits` + `live_edits_reason` answer "will
+  my edit land live?" (the same block is on `doseedo_list_plugins` and
+  `get_session.sync`). Live = the app running, Logic connected, this session
+  open — then edits reach the project within seconds; otherwise they persist
+  and land in the next download or open. Download never needs the desktop. When
   it is not connected the result carries `guidance`: the macOS app's
   download page, whether the user's plan includes it (Pro and up, else a
   one-time licence), how to pair it (install → Sign in → keep it running with
@@ -175,9 +192,11 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
    ops reference. An op the catalog doesn't list doesn't exist.
 4. Say what actually landed. `replay` and `warnings` are the truth; "the
    call returned 200" is not.
-5. **A part in a key / at the session tempo is YOUR MIDI.** `tempo_bpm` and
-   `time_signature` come from `get_session` (the session has no key field —
-   `doo analyze-song` a pitched stem or bounce for it; never guess or ask).
+5. **A part in a key / at the session tempo is YOUR MIDI.** `tempo_bpm`,
+   `time_signature` and (when known) `key_signature` come from `get_session`;
+   with no key, `doo analyze-song` a pitched stem or bounce for it — never
+   guess or ask — and set it with the `set_key_signature {tonic, mode}` op
+   where the ops reference lists it.
    Write the notes yourself and place them with `set_midi_notes` on an
    instrument track; to hear them as AI audio, `doo render-midi --session-id
    <sid> --track-id <t_…> --instrument <id> --bpm <tempo>` (or `--notes`; see
@@ -193,5 +212,11 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
 8. **No undo group per batch.** The desktop applies stored ops one at a time;
    a mid-batch failure leaves the earlier ops applied. Prefer one well-formed
    atomic batch over many small calls, and verify from `replay`.
+9. **Errors are one JSON shape** — `{error, code, retryable, plane, next,
+   request_id}`. Act on `next`: `service_unavailable` / `timeout` = wait 30 s,
+   retry ONCE, then tell the user which doseedo service (`plane`) is down;
+   never loop. `410 session_deleted` = stop using that id. Never poll a
+   session for changes (`/edits` reads are rate-limited): `get_session` is
+   the read.
 
 Op groups and the recipe list: [references/session-ops.md](references/session-ops.md).

@@ -5,19 +5,19 @@ the argument names with `_` → `-`. A local file argument fills `audio_key` /
 `project_key` (uploaded for you); an https URL fills `audio_url` where a job
 accepts one.
 
-| job | options | async kind | result |
+| job | options | kind (for `doo wait --kind` / `doseedo_wait_task`) | result |
 |---|---|---|---|
-| `separate_stems` | `--models 6stem\|auto\|orchestra\|detect`, `--instruments "a,b"`, `--include-midi false`, `--stems-only`, `--drum-split`, `--guitar-split auto\|2–4`, `--export logic\|ableton`, `--session-id` + `--parent-track-id` (register the stems into a session); file or `--audio-url` (a result URL works) | `separate` | `stems{name: url}`, `midi{name: url}`, `drum_substems{kick, snare, …}`, `vocals_lyrics`, `vocals_notes`, `session_url`, `session_tracks`, `models_effective`, `other_classification`, `guitar_split` |
-| `cover_song` | `--instruments '{"piano":"electric_guitar"}'`, `--lyrics`, `--genre "bossa nova"`, `--cover-noise-strength 0–1`, `--swap-cns 0–1`, `--regen all\|<stems>`, `--labels '{"other":"trumpet"}'`, `--midi-only`, `--timbre-preset`, `--style-key ingest/…`, `--structure-key ingest/…`, `--drum-split`, `--guitar-split auto\|2–4`, `--seed`, `--export logic\|ableton`; file or `--audio-url` | `cover` | `files[]`, `cover{duration, windowed, stems, instrument_swaps, genre, guitar_split}`, `seed`, `chain` |
+| `separate_stems` | `--models 6stem\|auto\|orchestra\|detect`, `--instruments "a,b"`, `--include-midi false`, `--stems-only`, `--drum-split`, `--guitar-split auto\|2–4`, `--export logic\|ableton`, `--session-id` + `--parent-track-id` (register the stems into a session); file or `--audio-url` (a result URL works) | `separate_stems` | `stems{name: url}`, `midi{name: url}`, `drum_substems{kick, snare, …}`, `vocals_lyrics`, `vocals_notes`, `session_url`, `session_tracks`, `models_effective`, `other_classification`, `guitar_split` |
+| `cover_song` | `--instruments '{"piano":"electric_guitar"}'`, `--lyrics`, `--genre "bossa nova"`, `--cover-noise-strength 0–1`, `--swap-cns 0–1`, `--regen all\|<stems>`, `--labels '{"other":"trumpet"}'`, `--midi-only`, `--timbre-preset`, `--style-key ingest/…`, `--structure-key ingest/…`, `--drum-split`, `--guitar-split auto\|2–4`, `--seed`, `--export logic\|ableton`; file or `--audio-url` | `cover_song` | `files[]`, `cover{duration, windowed, stems, instrument_swaps, genre, guitar_split}`, `seed`, `chain` |
 | `transcribe` | `--instrument`, `--tempo-bpm`, `--register`, `--polyphony solo\|poly\|section`, `--roster`, `--strikes`, `--want notes\|f0\|notes,f0` (file or `--audio-url`) | `transcribe` | `backend`, `result.notes[{pitch, onset, offset, velocity, confidence}]`, `result.f0` |
-| `generate_music` | `--prompt` (required), `--lyrics`, `--duration-seconds`, `--bpm` (caption hint), `--time-signature` (hint), `--seed` — no key, no MIDI (MIDI: `render_midi`) | `generate` | `files[]`, `duration`, `seed`, `best_of_n`, `chain` |
-| `render_midi` | `--notes '[{"pitch":62,"start_beats":0,"duration_beats":1,"velocity":100}, …]'` OR `--midi-url <.mid URL>` OR `--session-id` + `--track-id`; `--instrument` (required; ids: `/api/instruments`), `--bpm` (required), `--time-signature`, `--duration-seconds` (default last note + 2 s), `--takes 1–4`, `--seed`, `--voice-split` (chords), `--refine light\|shred`, `--timbre-preset`, `--timbre-audio-url`, `--dynamics mf` | `render` | `takes[{url, rank, score}]` best-first, `seed`, `duration`, `voices[]`, `refine.raw_url`, `chain` |
-| `audio_to_session` | `--target logic\|ableton`, `--midi-stems`, `--keep-stem-audio false`, `--chords`, `--key false`, `--markers false`, `--simple`, `--stem-mode auto\|6stem\|drumsep\|sections\|orchestra\|detect` (default auto; orchestra/detect need `--simple`), `--instruments`, `--quantize-midi grid\|score`, `--drum-substems`, `--drum-midi-split`, `--guitar-split auto\|0\|2–4`, `--retune false`, `--dereverb`, `--separate false`, `--tempo-map false`, `--crop-silence`, `--loops`, `--drum-sampler`, `--name`; file or `--audio-url` | `session` | `file` (zip), `summary` |
+| `generate_music` | `--prompt` (required), `--lyrics`, `--duration-seconds`, `--bpm` (caption hint), `--time-signature` (hint), `--seed` — no key, no MIDI (MIDI: `render_midi`) | `generate_music` | `files[]`, `duration`, `seed`, `best_of_n`, `chain` |
+| `render_midi` | `--notes '[{"pitch":62,"start_beats":0,"duration_beats":1,"velocity":100}, …]'` OR `--midi-url <.mid URL>` OR `--session-id` + `--track-id`; `--instrument` (required; ids: `/api/instruments`), `--bpm` (required), `--time-signature`, `--duration-seconds` (default last note + 2 s), `--takes 1–4`, `--seed`, `--voice-split` (chords), `--refine light\|shred`, `--timbre-preset`, `--timbre-audio-url`, `--dynamics mf` | `render_midi` | `takes[{url, rank, score}]` best-first, `seed`, `duration`, `voices[]`, `refine.raw_url`, `chain` |
+| `audio_to_session` | `--target logic\|ableton`, `--midi-stems`, `--keep-stem-audio false`, `--chords`, `--key false`, `--markers false`, `--simple`, `--stem-mode auto\|6stem\|drumsep\|sections\|orchestra\|detect` (default auto; orchestra/detect need `--simple`), `--instruments`, `--quantize-midi grid\|score`, `--drum-substems`, `--drum-midi-split`, `--guitar-split auto\|0\|2–4`, `--retune false`, `--dereverb`, `--separate false`, `--tempo-map false`, `--crop-silence`, `--loops`, `--drum-sampler`, `--name`; file or `--audio-url` | `audio_to_session` | `file` (zip), `summary` |
 | `analyze_song` | file or `--audio-url` | — (sync: the result is in the reply) | `key`, `bpm`, `tempo_map`, `meter`, `beats_per_bar`, `downbeats`, `sections`, `chords`, `dynamics` |
 | `detect_chords` | file or `--audio-url`, `--deep false` (CPU detector) | — (sync) | `chord_spans[{chord, start, end, start_beat, end_beat, confidence}]`, `chords{beat: symbol}`, `bpm`, `beat_map` |
 | `beat_grid` | file or `--audio-url` | — (sync) | `bpm`, `beats[]`, `downbeats[]`, `beats_per_bar`, `beat_map` |
 | `analyze_midi` | `--notes '[…]'` + `--bpm`, or `--midi-url`; `--mode midi\|chord`, `--beats-per-segment`, `--min-seg-beats` | — (sync) | `sonorities[]` or `chords[]`, `cover`, `cells`, `compression` |
-| `convert_project` | `--direction <src>2<dst>` (file = the project) | `convert` | `file` (zip) |
+| `convert_project` | `--direction <src>2<dst>` (file = the project) | `convert_project` | `file` (zip) |
 | `quote` | `--job`, `--args '{…}'` (render_midi: notes + bpm or duration_seconds, voices, takes) | — | `estimate{generation\|dsp}`, `affordable`, `account` |
 | `account` | — | — | `tier`, `credits.generation.monthly{cap, used, remaining}` (the ONE pool), `credits.generation.packs.balance`, `storage` |
 | `recipes` | `--name` | — | the recipe catalog |
@@ -37,9 +37,15 @@ GET  https://api.doseedo.com/api/jobs/<id>?wait=45    → repeat until status is
 A submit reply carries `eta_seconds [low, high]` and `suggested_next_wait`. The synchronous kinds
 (`analyze_song`, `detect_chords`, `beat_grid`, `analyze_midi`) answer `200` with `output` filled — no polling.
 
-Every kind, its input schema and price: `GET /api/jobs/kinds`; OpenAPI: `GET /api/jobs/openapi.json`.
-Errors are always `{error: {type, code, message, retryable}}` — retry only when `retryable` is true,
-and **send the same `Idempotency-Key` on the retry** (then it can never start a second job).
+Every kind, its input schema, aliases and price: `GET /api/jobs/kinds`; OpenAPI: `GET /api/jobs/openapi.json`.
+**`kind` on a submit must be the exact registry name** (the first column above); an alias such as
+`generate` or `stems` is refused with `400 unknown_kind` + `did_you_mean` so a typo never starts a
+billable job. The old short codes (`separate`, `session`, `cover`, `generate`, `render`, `convert`,
+`bounce`) are still accepted as aliases by `doo wait --kind` / `doseedo_wait_task`.
+Errors are always `{error: {type, code, message, retryable, plane, next, request_id}}` — retry only when
+`retryable` is true, ONCE after ~30 s for `service_unavailable` / `timeout` (then tell the user which
+doseedo service — `plane` — is down; never loop), and **send the same `Idempotency-Key` on the retry**
+(then it can never start a second job).
 `GET /api/jobs` lists your jobs; `POST /api/jobs/<id>/cancel` stops one; add `"webhook": {"url": "https://…"}`
 to a submit to be called on completion (Standard Webhooks; the signing secret is in the create response).
 

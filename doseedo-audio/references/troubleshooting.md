@@ -13,6 +13,9 @@
 | transcribe returns 0 notes | polyphonic mix, or the wrong instrument hint | run `doo stems` first and transcribe the stem; pass `--instrument` |
 | first call after idle is slow (~1 min) | the GPU plane scales to zero and cold-starts | normal; the CLI waits |
 | "no such file" with a path containing spaces | shell quoting | quote the path |
+| `code: service_unavailable` or `code: timeout` (the `plane` field names the service) | that doseedo service is down or not answering — not your input | wait 30 s, retry ONCE, then tell the user which service is down; never loop |
+| `400 unknown_kind` with `did_you_mean` | `kind` must be the exact registry name on a submit | use the suggested kind (`generate_music`, not `generate`) |
+| a result says `truncated: [{path, kept, total}]` + `next` | the answer was bigger than one tool result; arrays were shortened, nothing cut mid-JSON | follow `next` (download the artifacts, `GET /api/jobs/<id>`, or narrow the request) |
 
 ## Bash tool timeouts
 
