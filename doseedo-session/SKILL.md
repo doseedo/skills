@@ -1,5 +1,5 @@
 ---
-version: 0.1.5
+version: 0.1.6
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete
@@ -166,10 +166,12 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
 4. Say what actually landed. `replay` and `warnings` are the truth; "the
    call returned 200" is not.
 5. **A part in a key / at the session tempo is YOUR MIDI.** `tempo_bpm` and
-   `time_signature` come from `get_session` (there is no key field — ask, or
-   transcribe a pitched stem). Write the notes yourself and place them with
-   `set_midi_notes` on an instrument track; to hear them as AI audio, see
-   doseedo-audio ("render your own MIDI"). Prompt generation cannot hit a key.
+   `time_signature` come from `get_session` (the session has no key field —
+   `doo analyze-song` a pitched stem or bounce for it; never guess or ask).
+   Write the notes yourself and place them with `set_midi_notes` on an
+   instrument track; to hear them as AI audio, `doo render-midi --session-id
+   <sid> --track-id <t_…> --instrument <id> --bpm <tempo>` (or `--notes`; see
+   doseedo-audio). Prompt generation cannot hit a key.
 6. Live editing covers Logic Pro today. Building, reading and downloading
    cover Logic Pro and Ableton Live; for other DAWs, build for Logic and use
    doseedo-convert.

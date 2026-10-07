@@ -1,5 +1,5 @@
 ---
-version: 0.1.5
+version: 0.1.6
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
@@ -41,7 +41,8 @@ command per deliverable; the result is files on disk plus a verify hint.
 | the same song re-performed, instruments swapped, new lyrics | `doo cover <audio> [--instruments '{"piano":"electric_guitar"}'] [--lyrics …]` | 40 credits · 3–8 min |
 | the notes of a clip (JSON: pitch, onset, offset, velocity) | `doo transcribe <audio or https URL> [--instrument sax] [--tempo-bpm 120]` | up to 2 credits · 15–60 s |
 | a new track from a description (style/mood — NOT a key or exact tempo) | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 10 credits per 30 s · 1–3 min |
-| a part in a given key / at a session's tempo, or MIDI rendered as an instrument | write the MIDI yourself, then `doo generate --midi part.mid -i trombone --out part.wav` (see "Key, tempo and takes") | 10 credits per 30 s |
+| the key / tempo / meter / sections / chords of a recording | `doo analyze-song <audio or https URL>` (synchronous) | free · 5–20 s |
+| a part in a given key / at a session's tempo, or MIDI rendered as an instrument | write the notes yourself, then `doo render-midi --notes '[…]' --instrument trombone --bpm 92` (or `--midi-url`, or `doo generate --midi part.mid -i trombone`; see "Key, tempo and takes") | 10 credits per 30 s · 1–3 min |
 | a full DAW session from a mix | → doseedo-session (`doo session`) | |
 
 `doo recipes` prints this list from the server; `doo recipes get <name>`
@@ -81,21 +82,26 @@ every underlying job and `doo run <job> [--opt v] [file]` runs one directly
   hint** (the output can drift from it). Never promise "in D minor at 92 BPM"
   from a prompt.
 - **For a part that must fit a key and tempo, YOU write the MIDI**: get the
-  tempo (and the key — from the user, or by transcribing a pitched stem and
-  reading its pitch classes), compose the notes in that key at that tempo,
-  save `part.mid` (tempo meta = the session tempo), then render it:
-  `doo generate --midi part.mid -i <instrument>` (instrument ids:
-  `curl https://api.doseedo.com/api/instruments`). Keep one voice per part.
-  The same call without the CLI: `curl -X POST
+  key and tempo from the material — `doo analyze-song <reference>` (key, bpm,
+  meter, sections, chords; synchronous, free) — never by guessing or asking;
+  compose the notes in that key at that tempo as
+  `[{pitch, start_beats, duration_beats, velocity}]` (beats from bar 1), then
+  render them: `doo render-midi --notes '[…]' --instrument <id> --bpm <tempo>`
+  (instrument ids: `curl https://api.doseedo.com/api/instruments`; `--midi-url`
+  takes a .mid instead; `--voice-split` for chords; `--takes 1–4`; `--refine
+  light|shred`). Keep one voice per part. Check the harmony first for free with
+  `doo run analyze_midi --notes '[…]' --bpm <tempo> --mode chord`. The notes are
+  rendered AS WRITTEN — no snapping. Shell fallback, same request: `doo generate
+  --midi part.mid -i <id>` or `curl -X POST
   https://api.doseedo.com/api/generate-stemphonic -H "X-API-Key: $DOO_API_KEY"
   -F midiFile=@part.mid -F instrument=<id> -F prompt=<id> -F duration=<s>
-  -F bpm=<tempo> -F lyrics="[Instrumental]"` → poll the task (kind
-  `generate`) — the result lists every take.
-- **Several takes come back** for a pitched one-voice MIDI part (best-first
-  by a scorer; the CLI saves the top one). The model sometimes misses or
-  changes a note — expected. Hand the user the takes, or pick one by
-  listening / transcribing each and comparing against the notes you sent,
-  and say how you chose.
+  -F bpm=<tempo> -F lyrics="[Instrumental]"`.
+- **Several takes come back** for a pitched one-voice MIDI part
+  (`takes[{url, rank, score}]`, best-first by a scorer; the CLI saves the top
+  one; `seed` re-renders close to it). The model sometimes misses or changes a
+  note — expected. Hand the user the takes, or pick one by listening /
+  transcribing each (`doo transcribe <take url>`) and comparing against the
+  notes you sent, and say how you chose.
 - **Covers re-play transcribed notes**: an instrument swap transcribes the
   stem and re-performs it, so small note differences from the source are
   normal. Read `result.cover.instrument_swaps`, offer the result to judge.
@@ -115,6 +121,8 @@ doo stems solo.wav --models orchestra --instruments "saxophone,trumpet,trombone"
 doo cover song.wav --instruments '{"piano":"electric_guitar","sax":"violin"}'
 doo transcribe riff.wav --instrument sax --json | jq '.steps[0].result.result.notes | length'
 doo generate "warm jazz trio, brushed drums, late-night ballad" --duration-seconds 45
+doo analyze-song song.wav --json | jq '{key, bpm, meter}'
+doo render-midi --notes '[{"pitch":62,"start_beats":0,"duration_beats":2},{"pitch":65,"start_beats":2,"duration_beats":2}]' --instrument cello --bpm 92
 doo session song.wav --midi-stems piano,bass               # → doseedo-session
 ```
 
