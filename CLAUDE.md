@@ -44,7 +44,8 @@ skills/
   session skill verifies from `replay`, never by unzipping.
 - **Audio stays on the device** unless the server must hear it (the session
   skill's sample law).
-- **Cubase/Dorico asymmetry is stated up front**, in the skill description.
+- **The interchange-target asymmetry is stated up front** (Cubase / Studio One /
+  Bitwig get a `.dawproject`, Dorico MusicXML; GarageBand is a source only).
 
 ## Releasing
 

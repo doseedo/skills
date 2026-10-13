@@ -44,7 +44,7 @@ agent): [INSTALL_FOR_AGENTS.md](./INSTALL_FOR_AGENTS.md).
 |---|---|---|
 | [`doseedo-audio`](./doseedo-audio) | `/doseedo:audio` | Stems (+ per-stem MIDI, orchestral extractors), covers with instrument swaps, transcription to notes, music generation, rendering your MIDI as an instrument, key/tempo/chord analysis. `doo stems`, `doo cover`, `doo transcribe`, `doo generate`, `doo render-midi`, `doo analyze-song`. |
 | [`doseedo-session`](./doseedo-session) | `/doseedo:session` | A recording → a complete DAW session (`doo session`), and live DAW session control over the MCP: read the arrangement, add tracks and MIDI, load the user's own samples into Quick Sampler without uploading them, faders, plugins by name, buses, bounce, download a native project. Logic Pro edits apply live via Dø Desktop. |
-| [`doseedo-convert`](./doseedo-convert) | `/doseedo:convert` | DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase and Dorico, with the Cubase/Dorico asymmetry stated up front. `doo convert`. |
+| [`doseedo-convert`](./doseedo-convert) | `/doseedo:convert` | DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One and Bitwig (GarageBand as a source), with the interchange-target asymmetry stated up front. `doo convert`. |
 
 The skills chain: `doseedo-audio` stems → `doseedo-session` places them;
 `doseedo-session` builds for Logic → `doseedo-convert` delivers it in the

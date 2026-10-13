@@ -1,5 +1,5 @@
 ---
-version: 0.1.8
+version: 0.1.9
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete

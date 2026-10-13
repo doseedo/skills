@@ -1,18 +1,20 @@
 ---
-version: 0.1.8
+version: 0.1.9
 name: doseedo-convert
 description: |
   Convert a DAW project to another DAW with doseedo — Logic Pro, Ableton
-  Live, FL Studio, Pro Tools, REAPER, Cubase and Dorico, any pair, both
-  ways. The project is rebuilt natively: tracks, MIDI, audio clips, tempo
+  Live, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One (Fender
+  Studio Pro) and Bitwig Studio (any .dawproject), plus GarageBand as a
+  source. The project is rebuilt natively: tracks, MIDI, audio clips, tempo
   and markers arrive editable (Logic↔Ableton also carries automation,
   buses/sends and plugin state). Use when: "open this Ableton set in
   Logic", "send my Logic project to a Pro Tools user", "FL Studio to
   REAPER", "convert my project", ".als to .logicx", "Cubase to Ableton",
-  "get this score into Dorico". NOT for: building a session from AUDIO
+  "my GarageBand song in FL Studio", "Studio One to Logic", "open this in
+  Bitwig", "get this score into Dorico". NOT for: building a session from AUDIO
   (use doseedo-session), separating stems (use doseedo-audio), or
   converting audio file formats.
-argument-hint: "<project folder or file> [--to logic|ableton|fl|reaper|protools]"
+argument-hint: "<project folder or file> [--to logic|ableton|fl|reaper|protools|cubase|dorico|studioone|bitwig]"
 allowed-tools: Bash, mcp__doseedo__*
 ---
 
@@ -32,11 +34,17 @@ doo convert beat.flp --to reaper
 doo convert "Session Folder/" --to protools
 doo convert song.cpr --to ableton                 # Cubase → Ableton
 doo convert score.mxl --to logic                  # MusicXML (from Dorico) → Logic
+doo convert "My Song.band" --to ableton           # GarageBand package → .als
+doo convert "Mix.song" --to protools              # Studio One → Pro Tools
+doo convert set.dawproject --to logic             # Bitwig (or any DAWproject) → Logic
+doo convert "My Song.logicx" --to studioone       # → ONE .dawproject Studio One imports
 ```
 
-`--to` defaults to the "other" flagship DAW (Ableton → Logic, everything
+`--to` defaults to the "other" flagship DAW (Logic → Ableton, everything
 else → Logic). Output lands next to you as `<name>.logicx.zip`, `<name>.als`,
-`<name> FL.zip`, `<name> REAPER.zip`, `<name> Pro Tools.zip`; unzip and open.
+`<name> FL.zip`, `<name> REAPER.zip`, `<name> Pro Tools.zip`, a single
+`.dawproject` (Cubase / Studio One / Bitwig) or `.mxl` (Dorico); unzip the
+zips and open.
 Cost: 1 credit (+1 per GB past the first) from the monthly credit pool. Time
 15 s – 2 min; multi-GB sessions are fine (the bundle streams) up to the
 plan's size cap — guest/free 2 GB, paid 12 GB; beyond that, Dø Desktop
@@ -51,18 +59,26 @@ converts locally with no upload.
 | FL Studio / REAPER / Pro Tools | the **project folder** (`.flp`/`.rpp`/`.ptx` + its audio) | a bare file resolves external media only by absolute path |
 | Cubase | the `.cpr` | tracks, tempo, signature, MIDI parts carry; the audio pool does not → audio tracks arrive named but empty |
 | Dorico | a **MusicXML** export (`.musicxml`/`.mxl`), not the `.dorico` | a `.dorico` carries players and flows but NO notes |
+| GarageBand | the **`.band` package** (a folder — the CLI zips it; by hand, zip it like a `.logicx`) | GarageBand 10 / iOS only — a GarageBand 6 ('11) project must be opened and saved in GarageBand 10 first. A FILE named `.band` is a FabFilter preset or a cloud zip of the package |
+| Studio One | the `.song`, or the **song folder** (`.song` + `Media/`) so the audio travels | |
+| Bitwig | a **`.dawproject`** (Bitwig: File > Export… > DAWproject) | a native `.bwproject` is NOT read — the converter answers with that export hint. Any `.dawproject` works (Studio One / Cubase exports too) |
 
-## ★ Cubase and Dorico are asymmetric — say so before the user finds out
+## ★ Cubase, Studio One, Bitwig and Dorico are asymmetric — say so before the user finds out
 
-Neither native format is documented, so a file the app might refuse is never
-written:
+None of their native formats is documented, so a file the app might refuse
+is never written:
 
 | target | you get | opens in |
 |---|---|---|
 | Cubase | **`.dawproject`** (not `.cpr`) | Cubase 14+, Nuendo, Studio One, Bitwig — as a real editable session |
+| Studio One | **`.dawproject`** (not `.song`) | Studio One 6.5+ / Fender Studio Pro imports it (File > Import) |
+| Bitwig | **`.dawproject`** (not `.bwproject`) | Bitwig Studio 5+ imports it |
 | Dorico | **MusicXML `.mxl`** (not `.dorico`) | Dorico, MuseScore, Finale, Sibelius |
 
-A `.dawproject` for "convert to Cubase" is the correct result, not a failure.
+A `.dawproject` for "convert to Cubase / Studio One / Bitwig" is the correct
+result, not a failure. GarageBand is a SOURCE only — nothing writes a `.band`.
+Not every pair exists: no Studio One ↔ Bitwig, no Studio One ↔ Dorico, no
+GarageBand → Studio One / Bitwig (the error lists the valid directions).
 Details: [references/formats.md](references/formats.md).
 
 ## Verify, then hand over
@@ -70,8 +86,9 @@ Details: [references/formats.md](references/formats.md).
 1. The output exists and its extension is the target format (`.logicx` /
    `.als` / `.flp` / `.rpp` / `.ptx` / `.dawproject` / `.mxl`).
 2. Report what the conversion said it could not carry (plugin state across
-   ecosystems, Cubase audio pool, Dorico notes from a `.dorico`). Silence is
-   not "lossless".
+   ecosystems, Cubase audio pool, Dorico notes from a `.dorico`, GarageBand's
+   Apple instrument sounds, Bitwig built-in instruments / CLAP plugins).
+   Silence is not "lossless".
 3. Give the PATH. The converted project is the deliverable.
 
 ## Without a shell (pure MCP)
@@ -81,9 +98,10 @@ Details: [references/formats.md](references/formats.md).
 direction: "ableton2logic"}` → `doseedo_wait_task kind="convert"` → `curl -OJ`
 the result `file` URL (a direct storage link — no proxy, multi-GB safe).
 Directions are `<source>2<target>` over logic | ableton | fl | protools |
-reaper | cubase | dorico, `auto2<target>` to let the server detect the
-source, or `<daw>2<daw>` to rebuild a project in its own format (e.g. with
-`options.third_party_plugins:"disable"`). Zip a project FOLDER so its audio
+reaper | cubase | dorico | studioone | bitwig (and garageband as a source
+only), `auto2<target>` to let the server detect the source, or `<daw>2<daw>`
+to rebuild a Logic / Ableton / FL / REAPER / Pro Tools project in its own
+format (e.g. with `options.third_party_plugins:"disable"`). Zip a project FOLDER so its audio
 travels. Pass `size_bytes` to the upload tool: past 4 GB it hands you a
 multipart upload (`split -b <part_size>`, PUT each part, then
 `doseedo_complete_project_upload`). The finished task carries the transfer

@@ -2,8 +2,8 @@
   "$schema": "https://cursor.com/schemas/cursor-plugin/plugin.json",
   "name": "doseedo",
   "displayName": "doseedo",
-  "version": "0.1.8",
-  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico) via the doseedo CLI and MCP.",
+  "version": "0.1.9",
+  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
   "author": {
     "name": "doseedo",
     "email": "support@doseedo.com"

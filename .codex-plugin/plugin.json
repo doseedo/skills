@@ -1,7 +1,7 @@
 {
   "name": "doseedo",
-  "version": "0.1.8",
-  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico) via the doseedo CLI and MCP.",
+  "version": "0.1.9",
+  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
   "author": {
     "name": "doseedo",
     "email": "support@doseedo.com",
@@ -27,7 +27,7 @@
   "interface": {
     "displayName": "doseedo",
     "shortDescription": "Stems, DAW sessions, covers and DAW conversion for your agent",
-    "longDescription": "doseedo turns a coding agent into a music production assistant: split any mix into stems with per-stem MIDI, turn a recording into a complete Logic Pro or Ableton session, re-perform a song as a cover, transcribe audio to notes, generate music from a prompt, build and edit DAW sessions live (Logic Pro via Dø Desktop, from anywhere), and convert projects between Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase and Dorico. Every job is one CLI call or one MCP tool, priced before it runs.",
+    "longDescription": "doseedo turns a coding agent into a music production assistant: split any mix into stems with per-stem MIDI, turn a recording into a complete Logic Pro or Ableton session, re-perform a song as a cover, transcribe audio to notes, generate music from a prompt, build and edit DAW sessions live (Logic Pro via Dø Desktop, from anywhere), and convert projects between Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One and Bitwig — and out of GarageBand. Every job is one CLI call or one MCP tool, priced before it runs.",
     "developerName": "doseedo",
     "category": "Audio",
     "capabilities": [

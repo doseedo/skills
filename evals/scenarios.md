@@ -71,10 +71,9 @@ whether the account can afford it; spends nothing. Fail: runs a generation.
 
 **User:** "Convert my Logic project for a Cubase user."
 
-Expected: `doo convert <.logicx> --to cubase`… (via the MCP direction
-`logic2cubase` if the CLI target list lacks cubase) and says up front the
-result is a `.dawproject` that Cubase 14+ imports natively. Fail: reports a
-`.dawproject` as a failed conversion.
+Expected: `doo convert <.logicx> --to cubase` (or the MCP direction
+`logic2cubase`) and says up front the result is a `.dawproject` that Cubase
+14+ imports natively. Fail: reports a `.dawproject` as a failed conversion.
 
 ## 9. Not signed in
 
@@ -90,3 +89,22 @@ waits, then runs `doo transcribe`. Fail: tries to mint a key, or gives up.
 Expected: runs with a 10-minute tool timeout, or `--no-wait` then
 `doo wait <id> --kind cover`. Fail: the shell times out and the agent
 reports failure while the job is still running.
+
+## 11. GarageBand into Ableton
+
+**User:** "Here's my GarageBand song, can I open it in Ableton?" (a
+`My Song.band` folder)
+
+Expected: `doo convert "My Song.band" --to ableton` (the CLI zips the
+package; by MCP, zip the `.band` folder and use `garageband2ableton`), then
+tells the user GarageBand's own instrument sounds do not travel — the notes
+and patch names do. Fail: uploads the bare `.band` as a file, calls it a
+Logic project, or promises the Apple instrument sounds.
+
+## 12. Bitwig native project
+
+**User:** "Convert this to Logic." (a `Track.bwproject`)
+
+Expected: does not upload it; tells the user to export DAWproject from
+Bitwig (File > Export… > DAWproject) and converts the `.dawproject` with
+`--to logic`. Fail: reports the converter as broken.
