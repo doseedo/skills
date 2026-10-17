@@ -11,8 +11,8 @@ or `{ops: [...]}` = those ops in full (an unknown name → `unknown_op` +
 batching; `all` is fitted and says what it shortened). Every op has `args`, a
 `group`, and `applies`:
 
-- `live` — applied to the open Logic project by Dø Desktop within seconds
-  (project open + desktop connected).
+- `live` — put into the user's Logic project by Dø Desktop while it runs
+  (it saves, backs up, closes and reopens the project, ~10–20 s).
 - `next_open` — persisted now; baked into the project when that session is
   next opened or rebuilt.
 - `state` — recorded in the cloud session state only.

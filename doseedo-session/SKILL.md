@@ -1,5 +1,5 @@
 ---
-version: 0.1.9
+version: 0.1.10
 name: doseedo-session
 description: |
   Build, read and edit DAW sessions with doseedo: a recording → a complete
@@ -9,12 +9,12 @@ description: |
   the user's own samples into Quick Sampler without uploading, set faders,
   insert plugins by name, route buses, bounce through real plugin chains,
   download a native project. With Dø Desktop running, edits land in the
-  open Logic project live. Use when: "open this song in Logic as tracks",
+  user's Logic project (saved, backed up, reopened). Use when: "open this song in Logic as tracks",
   "build a session from this recording", "make a drum kit from these
   samples", "add a MIDI bass line to my session", "set the vocal to -6 dB",
   "put the drums on a bus", "bounce my session's stems", "swap my project
   onto this drum pack". NOT for: loose stems or covers (doseedo-audio),
-  converting a project to another DAW (doseedo-convert); live editing is
+  converting a project to another DAW (doseedo-convert); desktop edits are
   Logic Pro only (build/download: Logic and Ableton).
 argument-hint: "[audio-file | session request] [--target logic|ableton] [--midi-stems piano,bass]"
 allowed-tools: Bash, mcp__doseedo__*
@@ -29,8 +29,9 @@ Two paths, one product:
   and a chords guide.
 - **B. Session control** — the doseedo MCP tools. Read a session's full
   arrangement, edit it op-by-op, bounce, download. Works from anywhere
-  (including a phone); with Dø Desktop open on the user's Mac the edits
-  apply to the open Logic project live.
+  (including a phone, and from Claude or ChatGPT); with Dø Desktop running
+  on the user's Mac the edits go into their Logic project: the app saves
+  it, keeps a backup, closes it, writes the edits and reopens it.
 
 ## Step 0 — bootstrap
 
@@ -72,7 +73,7 @@ session IS the deliverable; don't build anything else to "show" it.
    `channel_id ch_…`), regions in beats AND seconds, mixer in dB, plugins,
    tempo, markers, `key_signature` when the session knows it, and a `sync`
    block with **`live_edits: true|false` + `live_edits_reason`** (will an edit
-   reach Logic now?). It is the WHOLE session (blocks omitted when empty):
+   reach the user's Logic project now?). It is the WHOLE session (blocks omitted when empty):
    `plugins[].params [{param_id, name, value}]` — `set_device_param` needs
    that `param_id`; `markers[].marker_id` with `beat` ABSOLUTE from bar 1;
    `sends[]` / `output` as `ch_b_…` ids; `tempo_map[]`, `meter_map[]`;
@@ -162,9 +163,16 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
   desktop is connected, what is installed on the user's Mac.
 - `doseedo_desktop_status`: `live_edits` + `live_edits_reason` answer "will
   my edit land live?" (the same block is on `doseedo_list_plugins` and
-  `get_session.sync`). Live = the app running, Logic connected, this session
-  open — then edits reach the project within seconds; otherwise they persist
-  and land in the next download or open. Download never needs the desktop. When
+  `get_session.sync`) — relay `live_edits_reason` to the user. With
+  `apply_mode: "reopen"` Dø Desktop saves the project (the user's unsaved work
+  included), backs it up (`~/Music/Logic/Dø Desktop Backups/`), closes it,
+  writes the edits and reopens it, ~10–20 s — so send each change as ONE
+  `doseedo_edit_session` batch and tell the user the project will close and
+  reopen. `sync.last_apply` says what landed (`applied`, `skipped`) or why it
+  waits (`logic_control: "needs_permission"` = the user clicks Allow in Dø
+  Desktop once; a cancelled save = they press Try again). The user can Undo
+  the last apply from the app. Otherwise edits persist and land in the next
+  download or open. Download never needs the desktop. When
   it is not connected the result carries `guidance`: the macOS app's
   download page, whether the user's plan includes it (Pro and up, else a
   one-time licence), how to pair it (install → Sign in → keep it running with
@@ -176,7 +184,7 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
   filters — it is a DRY RUN unless `confirm: true`: show the user the
   matched count first, delete only after they agree.
   `replay.deferred` lists ops the offline build could not synthesize —
-  rebuild those with a supported op or accept that they apply live; don't
+  rebuild those with a supported op or accept that they apply on the desktop; don't
   re-export blindly.
 - `doseedo_bounce_session` renders tracks through their real plugin chains
   (live via Logic, or headless) → poll `doseedo_wait_task kind="bounce"`;
