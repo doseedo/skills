@@ -8,8 +8,8 @@
     {
       "name": "doseedo",
       "source": "./",
-      "description": "Your notes played by 40+ AI instruments (orchestral to World), stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion via the doseedo CLI and MCP.",
-      "version": "0.1.11",
+      "description": "Your notes played by 40+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion via the doseedo CLI and MCP.",
+      "version": "0.1.12",
       "skills": [
         {
           "name": "audio",

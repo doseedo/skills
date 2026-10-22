@@ -1,12 +1,14 @@
 # doseedo skills
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.11-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/version-0.1.12-green.svg)](./VERSION)
 
 Skills that let an AI coding agent (Claude Code, Cursor, Codex, anything
 that loads Markdown skills) make music with [doseedo](https://doseedo.com):
 write a part as notes and have it played by 40+ AI instruments (orchestral
-strings, brass and winds, guitars, keys, drums, World instruments), split a mix into stems, turn a recording into a Logic Pro / Ableton session,
+strings, brass and winds, guitars, keys, drums, World instruments) or by a
+custom instrument trained from your own recording, timbre transfer, sound
+design and foley, split a mix into stems, turn a recording into a Logic Pro / Ableton session,
 cover a song on other instruments, transcribe, generate, edit DAW sessions
 from Claude or ChatGPT, and convert projects between ten DAW formats. Each job is one `doo` command
 or one MCP tool, priced before it runs.

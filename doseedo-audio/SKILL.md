@@ -1,16 +1,19 @@
 ---
-version: 0.1.11
+version: 0.1.12
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
-  cover with different instruments, transcribe audio to notes, or generate
-  music from a prompt — via the `doo` CLI (doseedo). Each job is one command
+  cover with different instruments, transcribe audio to notes, generate
+  music, play written notes on 40+ AI instruments or a CUSTOM instrument
+  trained from a recording, timbre transfer, sound design / foley — via
+  the `doo` CLI (doseedo). Each job is one command
   that uploads, waits and downloads; every job is priced before it runs.
   Use when: "separate this song", "give me the stems / vocals / drums / an
   acapella", "isolate the sax", "cover this song on guitar", "swap the piano
   for strings", "transcribe this solo", "what notes is this", "make me a
   track that sounds like…", "30 seconds of lo-fi piano", "render this MIDI
-  as a trombone". NOT for: turning a recording into a full DAW session or
+  as a trombone", "make an instrument from this recording", "play this
+  with that clip's tone", "a door-slam / whoosh sound effect". NOT for: turning a recording into a full DAW session or
   editing a DAW session (use doseedo-session), converting a project between
   DAWs (use doseedo-convert), or audio-format conversion.
 argument-hint: "[file-or-prompt] [--models orchestra] [--instruments sax,trumpet] [--json]"
@@ -43,6 +46,10 @@ command per deliverable; the result is files on disk plus a verify hint.
 | a new track from a description (style/mood — NOT a key or exact tempo) | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 10 credits per 30 s · 1–3 min |
 | the key / tempo / meter / sections / chords of a recording | `doo analyze-song <audio or https URL>` (synchronous) | free · 5–20 s |
 | a part in a given key / at a session's tempo, or MIDI rendered as an instrument | write the notes yourself, then `doo render-midi --notes '[…]' --instrument trombone --bpm 92` (or `--midi-url`, or `doo generate --midi part.mid -i trombone`; see "Key, tempo and takes") | 10 credits per 30 s · 1–3 min |
+| YOUR OWN instrument from a recording (a rare/folk instrument, one player's tone) | `doo custom-instrument <30 s–3 min solo recording> --instrument acoustic_guitar --name "My shamisen"` → `lora_id`; then `doo render-midi --notes '[…]' --instrument acoustic_guitar --bpm 92 --lora-id <id>` | 20 credits · 1–2 min to train |
+| your notes with the SOUND of a recording (timbre transfer) | `doo timbre-transfer --notes '[…]' --instrument violin --bpm 92 --timbre-audio-url <https URL of the reference>` (a separated stem is ideal) | 10 credits per 30 s · 1–3 min |
+| a recorded line (humming, a riff) played back by another instrument | `doo run cover_stem --audio-url <url> --instrument cello --duration-seconds 12` | 10 credits per 30 s · 30–90 s |
+| a sound effect, foley, one-shot, loop or ambience | `doo sound-design --prompt "heavy wooden door slam in a stone hall" [--kind hit\|loop\|texture]` | 10 credits per 30 s · 15–40 s |
 | a full DAW session from a mix | → doseedo-session (`doo session`) | |
 
 `doo recipes` prints this list from the server; `doo recipes get <name>`
@@ -87,7 +94,8 @@ every underlying job and `doo run <job> [--opt v] [file]` runs one directly
   compose the notes in that key at that tempo as
   `[{pitch, start_beats, duration_beats, velocity}]` (beats from bar 1), then
   render them: `doo render-midi --notes '[…]' --instrument <id> --bpm <tempo>`
-  (the instrument comes from the catalog — the MCP tool `doseedo_instruments`
+  (the instrument comes from the catalog — the MCP tool `doseedo_instruments` (not in it? train
+  one from a recording: `doo custom-instrument`)
   lists 40+ with each one's exact call, range in concert pitch and presets;
   a World instrument is named on its own, `--instrument koto`, and resolves
   to its call `--instrument acoustic_guitar --timbre-preset koto:preset1`;
