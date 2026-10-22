@@ -1,5 +1,5 @@
 ---
-version: 0.1.12
+version: 0.1.13
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
@@ -49,6 +49,8 @@ command per deliverable; the result is files on disk plus a verify hint.
 | YOUR OWN instrument from a recording (a rare/folk instrument, one player's tone) | `doo custom-instrument <30 s–3 min solo recording> --instrument acoustic_guitar --name "My shamisen"` → `lora_id`; then `doo render-midi --notes '[…]' --instrument acoustic_guitar --bpm 92 --lora-id <id>` | 20 credits · 1–2 min to train |
 | your notes with the SOUND of a recording (timbre transfer) | `doo timbre-transfer --notes '[…]' --instrument violin --bpm 92 --timbre-audio-url <https URL of the reference>` (a separated stem is ideal) | 10 credits per 30 s · 1–3 min |
 | a recorded line (humming, a riff) played back by another instrument | `doo run cover_stem --audio-url <url> --instrument cello --duration-seconds 12` | 10 credits per 30 s · 30–90 s |
+| a WHOLE score / arrangement (several parts at once) → a stem per part + a mix + a Logic/Ableton project | `doo score <MusicXML or multi-track MIDI URL> [--target ableton]` (the parts you wrote as notes: MCP `doseedo_render_score {parts}`); each part's `fit` receipt says whether it played its notes | 10 credits per 30 s window per 6 parts · 2–5 min |
+| music for a film or video that must hit the cuts | `doo recipes get score-a-film`: spot the cuts (ffmpeg), `doseedo_tempo_map` (hit points or SMPTE timecode → a tempo map that lands them on downbeats, free), write the parts, `doseedo_render_score`, `doseedo_generate_sound` for hits, `doseedo_session_from_stems` | as above |
 | a sound effect, foley, one-shot, loop or ambience | `doo sound-design --prompt "heavy wooden door slam in a stone hall" [--kind hit\|loop\|texture]` | 10 credits per 30 s · 15–40 s |
 | a full DAW session from a mix | → doseedo-session (`doo session`) | |
 

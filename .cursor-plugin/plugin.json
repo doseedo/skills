@@ -2,7 +2,7 @@
   "$schema": "https://cursor.com/schemas/cursor-plugin/plugin.json",
   "name": "doseedo",
   "displayName": "doseedo",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Your notes played by 40+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
   "author": {
     "name": "doseedo",
