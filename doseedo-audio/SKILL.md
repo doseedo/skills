@@ -1,5 +1,5 @@
 ---
-version: 0.1.10
+version: 0.1.11
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
@@ -87,7 +87,11 @@ every underlying job and `doo run <job> [--opt v] [file]` runs one directly
   compose the notes in that key at that tempo as
   `[{pitch, start_beats, duration_beats, velocity}]` (beats from bar 1), then
   render them: `doo render-midi --notes '[…]' --instrument <id> --bpm <tempo>`
-  (instrument ids: `curl https://api.doseedo.com/api/instruments`; `--midi-url`
+  (the instrument comes from the catalog — the MCP tool `doseedo_instruments`
+  lists 40+ with each one's exact call, range in concert pitch and presets;
+  a World instrument is named on its own, `--instrument koto`, and resolves
+  to its call `--instrument acoustic_guitar --timbre-preset koto:preset1`;
+  raw registry: `curl https://api.doseedo.com/api/instruments`; `--midi-url`
   takes a .mid instead; `--voice-split` for chords; `--takes 1–4`; `--refine
   light|shred`). Keep one voice per part. Check the harmony first for free with
   `doo run analyze_midi --notes '[…]' --bpm <tempo> --mode chord`. The notes are

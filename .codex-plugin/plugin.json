@@ -1,7 +1,7 @@
 {
   "name": "doseedo",
-  "version": "0.1.10",
-  "description": "Stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
+  "version": "0.1.11",
+  "description": "Your notes played by 40+ AI instruments (orchestral to World), stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
   "author": {
     "name": "doseedo",
     "email": "support@doseedo.com",
