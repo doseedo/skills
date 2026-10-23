@@ -1,11 +1,11 @@
 # doseedo skills
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.13-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/version-0.1.14-green.svg)](./VERSION)
 
 Skills that let an AI coding agent (Claude Code, Cursor, Codex, anything
 that loads Markdown skills) make music with [doseedo](https://doseedo.com):
-write a part as notes and have it played by 40+ AI instruments (orchestral
+write a part as notes and have it played by 50+ AI instruments (orchestral
 strings, brass and winds, guitars, keys, drums, World instruments) or by a
 custom instrument trained from your own recording, timbre transfer, sound
 design and foley, split a mix into stems, turn a recording into a Logic Pro / Ableton session,

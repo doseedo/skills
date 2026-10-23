@@ -1,7 +1,7 @@
 {
   "name": "doseedo",
-  "version": "0.1.13",
-  "description": "doseedo skills for AI coding agents: your notes played by 40+ AI instruments (orchestral to World) or a custom instrument trained from your recording, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, DAW session control (edits land in Logic Pro via Dø Desktop), and DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One and Bitwig, plus GarageBand projects in.",
+  "version": "0.1.14",
+  "description": "doseedo skills for AI coding agents: your notes played by 50+ AI instruments (orchestral to World) or a custom instrument trained from your recording, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, DAW session control (edits land in Logic Pro via Dø Desktop), and DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One and Bitwig, plus GarageBand projects in.",
   "author": {
     "name": "doseedo",
     "url": "https://doseedo.com"
@@ -22,6 +22,22 @@
     "transcription",
     "music-generation",
     "daw-conversion",
-    "mcp"
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ai-agents",
+    "midi-to-audio",
+    "ai-instruments",
+    "virtual-instruments",
+    "sound-effects",
+    "sfx",
+    "foley",
+    "sound-design",
+    "vocal-remover",
+    "audio-to-midi",
+    "music-transcription",
+    "text-to-music",
+    "film-scoring",
+    "mixing"
   ]
 }

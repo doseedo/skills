@@ -1,7 +1,7 @@
 {
   "name": "doseedo",
-  "version": "0.1.13",
-  "description": "Your notes played by 40+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
+  "version": "0.1.14",
+  "description": "Your notes played by 50+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
   "author": {
     "name": "doseedo",
     "email": "support@doseedo.com",
@@ -21,7 +21,25 @@
     "midi",
     "transcription",
     "music-generation",
-    "daw-conversion"
+    "daw-conversion",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ai-agents",
+    "midi-to-audio",
+    "ai-instruments",
+    "virtual-instruments",
+    "sound-effects",
+    "sfx",
+    "foley",
+    "sound-design",
+    "stem-separation",
+    "vocal-remover",
+    "audio-to-midi",
+    "music-transcription",
+    "text-to-music",
+    "film-scoring",
+    "mixing"
   ],
   "skills": "./",
   "interface": {

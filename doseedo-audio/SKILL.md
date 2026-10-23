@@ -1,19 +1,19 @@
 ---
-version: 0.1.13
+version: 0.1.14
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
   cover with different instruments, transcribe audio to notes, generate
-  music, play written notes on 40+ AI instruments or a CUSTOM instrument
+  music, play written notes on 50+ AI instruments or a CUSTOM instrument
   trained from a recording, timbre transfer, sound design / foley — via
-  the `doo` CLI (doseedo). Each job is one command
-  that uploads, waits and downloads; every job is priced before it runs.
+  the `doo` CLI (doseedo). Each job is one command, priced before it runs.
   Use when: "separate this song", "give me the stems / vocals / drums / an
   acapella", "isolate the sax", "cover this song on guitar", "swap the piano
   for strings", "transcribe this solo", "what notes is this", "make me a
   track that sounds like…", "30 seconds of lo-fi piano", "render this MIDI
   as a trombone", "make an instrument from this recording", "play this
-  with that clip's tone", "a door-slam / whoosh sound effect". NOT for: turning a recording into a full DAW session or
+  with that clip's tone", "a door-slam / whoosh sound effect (SFX)", "remove the
+  vocals", "audio to MIDI". NOT for: turning a recording into a full DAW session or
   editing a DAW session (use doseedo-session), converting a project between
   DAWs (use doseedo-convert), or audio-format conversion.
 argument-hint: "[file-or-prompt] [--models orchestra] [--instruments sax,trumpet] [--json]"
