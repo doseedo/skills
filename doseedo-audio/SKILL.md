@@ -1,10 +1,10 @@
 ---
-version: 0.1.14
+version: 0.1.15
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
-  cover with different instruments, transcribe audio to notes, generate
-  music, play written notes on 50+ AI instruments or a CUSTOM instrument
+  cover with different instruments, transcribe audio to notes, play the
+  music you write (every part's notes) on 50+ AI instruments or a CUSTOM instrument
   trained from a recording, timbre transfer, sound design / foley — via
   the `doo` CLI (doseedo). Each job is one command, priced before it runs.
   Use when: "separate this song", "give me the stems / vocals / drums / an
@@ -43,7 +43,7 @@ command per deliverable; the result is files on disk plus a verify hint.
 | orchestral / horn / named instruments out of a mix | `doo stems <audio> --models orchestra --instruments "saxophone,trumpet"` | 1 + ⌈n/8⌉ · ~2–4 min |
 | the same song re-performed, instruments swapped, new lyrics | `doo cover <audio> [--instruments '{"piano":"electric_guitar"}'] [--lyrics …]` | 40 credits · 3–8 min |
 | the notes of a clip (JSON: pitch, onset, offset, velocity) | `doo transcribe <audio or https URL> [--instrument sax] [--tempo-bpm 120]` | up to 2 credits · 15–60 s |
-| a new track from a description (style/mood — NOT a key or exact tempo) | `doo generate "<prompt>" [--duration-seconds 30] [--lyrics …] [--bpm 100]` | 10 credits per 30 s · 1–3 min |
+| music to deliver — a bed for a video, a theme, an instrumental, a song | doseedo does not compose: YOU write every part as notes (length → bars, key, form, players from `doseedo_instruments`), then MCP `doseedo_render_score {parts}` (one stem per part + a mix) → `doseedo_mix`; one instrument: `doo render-midi`. Steps: `doo recipes get compose-piece`. (`doo generate "<prompt>"` is a prompt-only sketch with no notes behind it — often near-silent or droning; never the deliverable) | 10 credits per 30 s window per 6 parts · 2–5 min |
 | the key / tempo / meter / sections / chords of a recording | `doo analyze-song <audio or https URL>` (synchronous) | free · 5–20 s |
 | a part in a given key / at a session's tempo, or MIDI rendered as an instrument | write the notes yourself, then `doo render-midi --notes '[…]' --instrument trombone --bpm 92` (or `--midi-url`, or `doo generate --midi part.mid -i trombone`; see "Key, tempo and takes") | 10 credits per 30 s · 1–3 min |
 | YOUR OWN instrument from a recording (a rare/folk instrument, one player's tone) | `doo custom-instrument <30 s–3 min solo recording> --instrument acoustic_guitar --name "My shamisen"` → `lora_id`; then `doo render-midi --notes '[…]' --instrument acoustic_guitar --bpm 92 --lora-id <id>` | 20 credits · 1–2 min to train |
@@ -135,7 +135,7 @@ doo stems "My Song.wav"                                  # vocals drums bass gui
 doo stems solo.wav --models orchestra --instruments "saxophone,trumpet,trombone"
 doo cover song.wav --instruments '{"piano":"electric_guitar","sax":"violin"}'
 doo transcribe riff.wav --instrument sax --json | jq '.steps[0].result.result.notes | length'
-doo generate "warm jazz trio, brushed drums, late-night ballad" --duration-seconds 45
+doo recipes get compose-piece                             # music to deliver: YOU write the parts, doseedo plays + mixes them
 doo analyze-song song.wav --json | jq '{key, bpm, meter}'
 doo render-midi --notes '[{"pitch":62,"start_beats":0,"duration_beats":2},{"pitch":65,"start_beats":2,"duration_beats":2}]' --instrument cello --bpm 92
 doo session song.wav --midi-stems piano,bass               # → doseedo-session
