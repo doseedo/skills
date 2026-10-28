@@ -120,8 +120,8 @@ session IS the deliverable; don't build anything else to "show" it.
   `get_session` — never invented.
 - Beats are absolute from bar 1 (beat 0 = bar 1) at the project tempo; one
   bar of 4/4 = 4 beats.
-- Faders: `set_channel_volume value 0.709` = 0 dB (unity). A new track
-  defaults to 1.0 = +6 dB — set 0.709 explicitly.
+- Faders: `set_channel_volume value 0.709` = 0 dB (unity), 1.0 = +6 dB. A new
+  track opens at 0 dB in the downloaded project.
 - Sends: `level 1 = unity` (linear 0–2); `level_raw` 0–127 where an op
   offers it.
 - Quick Sampler plays a loaded one-shot at its recorded pitch on C3 = MIDI 60:
@@ -139,9 +139,12 @@ to the sampler's `plays_beats` from `doseedo_get_session`, or fix them later wit
 `edit_midi_notes` (legato / duration_beats on a selection; no re-sending).
 Audio regions from a local file: `attach_audio {track_id, local_path,
 audio_info, start_beats}` or N hits with `set_track_clips` — `audio_info`
-(sample_rate, frame_count, channels, bits_per_sample, bytes) is read from the
-file header locally. `attach_audio` REPLACES the track's primary region (it
-does not stack); use `set_track_clips` for several regions. The download then
+(sample_rate, frame_count, channels, bits_per_sample, bytes, data_offset) is
+read from the file header locally. `attach_audio` REPLACES the track's primary
+region (it does not stack); use `set_track_clips` for several regions — it
+REPLACES the track's clips, an earlier `attach_audio` included. Cut one long
+stem into sections with `audio_ref.source_offset_samples` per clip (no file
+per region). Keep every file at one sample rate: the project runs at it. The download then
 returns `place_local_files`: `cp` commands that drop each file into the
 unzipped bundle — run EVERY one after unzipping, exactly as given, for local
 samples AND local audio regions, or those tracks open empty. A `replay`

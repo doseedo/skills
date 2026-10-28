@@ -58,8 +58,14 @@ name, audio_ref:{local_path, audio_info}}]}` where `audio_info` comes from
 the header (the same `audio_info` a local `load_quick_sampler_sample` needs):
 
 ```bash
-python3 -c 'import wave,os,json,sys; w=wave.open(sys.argv[1]); print(json.dumps({"sample_rate":w.getframerate(),"frame_count":w.getnframes(),"channels":w.getnchannels(),"bits_per_sample":w.getsampwidth()*8,"bytes":os.path.getsize(sys.argv[1])}))' hat.wav
+python3 -c 'import wave,os,json,sys; w=wave.open(sys.argv[1]); print(json.dumps({"sample_rate":w.getframerate(),"frame_count":w.getnframes(),"channels":w.getnchannels(),"bits_per_sample":w.getsampwidth()*8,"bytes":os.path.getsize(sys.argv[1]),"data_offset":w.getfp().tell()+8}))' hat.wav
 ```
+
+`data_offset` is where the samples start (44 for a plain WAV; more when the
+file carries bext/LIST/JUNK chunks) — a wrong one makes Logic re-cut the
+regions on open ("audio files changed in length"). A long stem cut into
+sections is ONE file: give each clip `audio_ref.source_offset_samples` (the
+sample the region starts at in the file).
 
 Why this works: the Logic writer only ever needs an audio file's header and
 size to lay out regions and wire samplers — the bytes are placed by the copy

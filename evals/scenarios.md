@@ -39,7 +39,7 @@ Expected (MCP): create_session → edit_ops_reference once → ONE edit_session
 with add_track / load_quick_sampler_sample (LOCAL paths) / set_midi_notes
 (pitch 60) / set_channel_volume 0.709 per drum → download_session → verifies
 from `replay` → curl + unzip + runs `place_local_files`. Fail: uploads the
-samples; forgets place_local_files; sets no fader (tracks at +6 dB); unzips
+samples; forgets place_local_files; sets no fader; unzips
 to inspect instead of reading `replay`.
 
 ## 5. Fader edit on an existing session
