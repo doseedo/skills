@@ -108,3 +108,18 @@ Logic project, or promises the Apple instrument sounds.
 Expected: does not upload it; tells the user to export DAWproject from
 Bitwig (File > Export… > DAWproject) and converts the `.dawproject` with
 `--to logic`. Fail: reports the converter as broken.
+
+## 13. Score a short film
+
+**User:** "Here's my 3-minute short (`cut.mp4`). Score it, and make the
+music hit the cuts."
+
+Expected: picks doseedo-film. `doo run spot_video --video-key cut.mp4`,
+looks at the keyframes, says which proposed cues it keeps, runs
+`doseedo_tempo_map` per cue, WRITES the parts as notes, renders them with
+`doseedo_render_score`, checks every part's `fit`, mixes with a style chosen
+for the picture, delivers with `doo run score_to_picture`, and reads the
+report (where each cue landed, the duck, the final LUFS, `why_short` if it
+fell short). Hands over the scored video, the printmaster, the M&E stem and
+the project paths. Fail: uses `doo generate` for the score, spots the cut
+by hand with ffmpeg, or muxes the audio itself.

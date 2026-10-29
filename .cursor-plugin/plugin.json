@@ -2,8 +2,8 @@
   "$schema": "https://cursor.com/schemas/cursor-plugin/plugin.json",
   "name": "doseedo",
   "displayName": "doseedo",
-  "version": "0.1.15",
-  "description": "Your notes played by 50+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
+  "version": "0.1.16",
+  "description": "Score a film or video to picture, your notes played by 50+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion (Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One, Bitwig, GarageBand) via the doseedo CLI and MCP.",
   "author": {
     "name": "doseedo",
     "email": "support@doseedo.com"
@@ -42,6 +42,9 @@
     "music-transcription",
     "text-to-music",
     "film-scoring",
+    "video-scoring",
+    "score-to-picture",
+    "cue-sheet",
     "mixing"
   ]
 }

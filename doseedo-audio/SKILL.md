@@ -1,5 +1,5 @@
 ---
-version: 0.1.15
+version: 0.1.16
 name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
@@ -51,7 +51,7 @@ command per deliverable; the result is files on disk plus a verify hint.
 | a recorded line (humming, a riff) played back by another instrument | `doo run cover_stem --audio-url <url> --instrument cello --duration-seconds 12` | 10 credits per 30 s · 30–90 s |
 | the gap between two clips (or a bar to redo) played again, the take around it kept | `doo run fill_gap --audio-url <url> --duration-seconds 32 --gap-start-seconds 16 --gap-end-seconds 24 --bpm 120` | 10 credits per 30 s of the audio + 1 dsp · 40–150 s |
 | a WHOLE score / arrangement (several parts at once) → a stem per part + a mix + a Logic/Ableton project | `doo score <MusicXML or multi-track MIDI URL> [--target ableton]` (the parts you wrote as notes: MCP `doseedo_render_score {parts}`); each part's `fit` receipt says whether it played its notes | 10 credits per 30 s window per 6 parts · 2–5 min |
-| music for a film or video that must hit the cuts | `doo recipes get score-a-film`: spot the cuts (ffmpeg), `doseedo_tempo_map` (hit points or SMPTE timecode → a tempo map that lands them on downbeats, free), write the parts, `doseedo_render_score`, `doseedo_generate_sound` for hits, `doseedo_mix` (the real mix + its editable document), `doseedo_session_from_stems` with `mix_job` | as above |
+| music for a film or video that must hit the cuts, or a video scored and delivered | → doseedo-film: `doo run spot_video --video-key film.mp4` (the cue sheet from the cut), `doseedo_tempo_map`, YOUR parts → `doseedo_render_score` → `doseedo_mix` → `doo run score_to_picture` (the score on the picture, ducked under the dialogue) | spotting, mix and delivery: no credits; render as above |
 | a sound effect, foley, one-shot, loop or ambience | `doo sound-design --prompt "heavy wooden door slam in a stone hall" [--kind hit\|loop\|texture]` | 10 credits per 30 s · 15–40 s |
 | a full DAW session from a mix | → doseedo-session (`doo session`) | |
 

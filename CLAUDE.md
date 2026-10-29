@@ -1,11 +1,12 @@
 # CLAUDE.md — doseedo skills (maintainers)
 
-Three skills that drive the `doo` CLI and the doseedo MCP:
+Four skills that drive the `doo` CLI and the doseedo MCP:
 
 ```
 doseedo-audio    →  doo stems / cover / transcribe / generate   (+ doo run <job>)
 doseedo-session  →  doo session  +  MCP session control (list/get/edit/download/bounce)
 doseedo-convert  →  doo convert  (+ MCP convert_project)
+doseedo-film     →  doo run spot_video / tempo_map / render_score / mix / score_to_picture
 ```
 
 ## Source of truth
@@ -29,7 +30,8 @@ skills/
 ├── evals/{README,scenarios}.md
 ├── doseedo-audio/{SKILL.md, references/{jobs,troubleshooting}.md}
 ├── doseedo-session/{SKILL.md, references/{session-ops,local-samples}.md}
-└── doseedo-convert/{SKILL.md, references/formats.md}
+├── doseedo-convert/{SKILL.md, references/formats.md}
+└── doseedo-film/SKILL.md
 ```
 
 ## Key decisions (do not revisit without data)

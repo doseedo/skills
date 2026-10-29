@@ -8,8 +8,8 @@
     {
       "name": "doseedo",
       "source": "./",
-      "description": "Your notes played by 50+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion via the doseedo CLI and MCP.",
-      "version": "0.1.15",
+      "description": "Score a film or video to picture, your notes played by 50+ AI instruments (orchestral to World) or your own trained instrument, timbre transfer, sound design / foley, stems, DAW sessions from audio, covers, transcription, music generation, live DAW session control and DAW project conversion via the doseedo CLI and MCP.",
+      "version": "0.1.16",
       "skills": [
         {
           "name": "audio",
@@ -25,6 +25,11 @@
           "name": "convert",
           "path": "doseedo-convert",
           "invoke": "/doseedo:convert"
+        },
+        {
+          "name": "film",
+          "path": "doseedo-film",
+          "invoke": "/doseedo:film"
         }
       ]
     }
