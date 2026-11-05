@@ -1,7 +1,7 @@
 # doseedo skills
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.15-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/version-0.1.17-green.svg)](./VERSION)
 
 Skills that let an AI coding agent (Claude Code, Cursor, Codex, anything
 that loads Markdown skills) make music with [doseedo](https://doseedo.com):
@@ -12,6 +12,15 @@ design and foley, split a mix into stems, turn a recording into a Logic Pro / Ab
 cover a song on other instruments, transcribe, generate, edit DAW sessions
 from Claude or ChatGPT, and convert projects between ten DAW formats. Each job is one `doo` command
 or one MCP tool, priced before it runs.
+
+Scoring a film needs no agent at all: doseedo is an AI film scorer in your
+browser at [doseedo.com/studio/score](https://doseedo.com/studio/score).
+Upload the film and an AI composer watches the cut, writes, plays and mixes
+an original score that lands on the cuts, and delivers the scored film plus
+every part as its own native stem with its MIDI (so one instrument, bar or
+cue can be revised without regenerating the rest), an M&E, a music cue sheet
+and an editable Logic Pro, Ableton Live or REAPER session. The
+`doseedo-film` skill runs the same loop from your own agent.
 
 ## Install
 
@@ -48,7 +57,7 @@ agent): [INSTALL_FOR_AGENTS.md](./INSTALL_FOR_AGENTS.md).
 | [`doseedo-audio`](./doseedo-audio) | `/doseedo:audio` | Stems (+ per-stem MIDI, orchestral extractors), covers with instrument swaps, transcription to notes, the music you write played on AI instruments (doseedo does not compose from a prompt), key/tempo/chord analysis. `doo stems`, `doo cover`, `doo transcribe`, `doo generate`, `doo render-midi`, `doo analyze-song`. |
 | [`doseedo-session`](./doseedo-session) | `/doseedo:session` | A recording → a complete DAW session (`doo session`), and live DAW session control over the MCP: read the arrangement, add tracks and MIDI, load the user's own samples into Quick Sampler without uploading them, faders, plugins by name, buses, bounce, download a native project. Dø Desktop puts edits into the Logic project (save, back up, close, reopen). |
 | [`doseedo-convert`](./doseedo-convert) | `/doseedo:convert` | DAW project conversion across Logic, Ableton, FL Studio, Pro Tools, REAPER, Cubase, Dorico, Studio One and Bitwig (GarageBand as a source), with the interchange-target asymmetry stated up front. `doo convert`. |
-| [`doseedo-film`](./doseedo-film) | `/doseedo:film` | Score a film or video: the cue sheet from the cut (every cut frame-exact, dialogue, proposed cues with SMPTE in/out and hit points), hit points landed on downbeats, the parts the agent writes played on 50+ AI instruments, mixed for the picture and laid on the video under the dialogue at a delivery loudness, plus the Logic or Ableton project. `doo run spot_video` … `doo run score_to_picture`. |
+| [`doseedo-film`](./doseedo-film) | `/doseedo:film` | Score a film or video: the cue sheet from the cut (every cut frame-exact, dialogue, proposed cues with SMPTE in/out and hit points), hit points landed on downbeats, the parts the agent writes played on 50+ AI instruments, mixed for the picture and laid on the video under the dialogue at a delivery loudness, plus the Logic Pro, Ableton Live or REAPER project. The same loop runs in the browser at doseedo.com/studio/score. `doo run spot_video` … `doo run score_to_picture`. |
 
 The skills chain: `doseedo-audio` stems → `doseedo-session` places them;
 `doseedo-session` builds for Logic → `doseedo-convert` delivers it in the

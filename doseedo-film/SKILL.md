@@ -1,5 +1,5 @@
 ---
-version: 0.1.16
+version: 0.1.17
 name: doseedo-film
 description: |
   Score a film or video as an agent: doseedo watches the cut and hands you
@@ -26,7 +26,11 @@ doseedo does the parts of scoring to picture an agent cannot do alone:
 watching every frame, making an orchestra play, and delivering a scored
 file. YOU do the musical thinking in between. The same loop runs over MCP
 (`https://api.doseedo.com/mcp/film` lists only these tools); this skill runs
-it with the `doo` CLI.
+it with the `doo` CLI. A user who would rather not run an agent can score the
+film in the browser at https://doseedo.com/studio/score: doseedo's own
+composer runs this loop there and hands back the scored film, every part as
+its own native stem with its MIDI, an M&E, a music cue sheet and a Logic Pro,
+Ableton Live or REAPER session of the whole score.
 
 ## Step 0 — bootstrap
 
@@ -50,7 +54,7 @@ it with the `doo` CLI.
 | 6. Sound design | `doo sound-design --prompt "heavy door slam in a stone hall" --kind hit` | 10 credits · ~20 s |
 | 7. Mix the cue | `doo run mix --from-job <render job_id> --style <style>` — pick the style for the picture: `cartoon-studio` for animation, `film-orchestral` (default hall) for drama, `film-scoring-stage` for TV / documentary, `film-epic-hybrid` for trailers; `--target-lufs` = the delivery loudness (delivery never limits), `--length-s` cuts it with an end fade | no credits · ~40 s |
 | 8. On the picture | `doo run score_to_picture --video-key film.mp4 --tracks '[{"audio_url":"<mix_url>","start_timecode":"01:00:11:21","name":"1M1"},{"audio_url":"door.wav","start_timecode":"01:00:15:18","role":"sfx"}]' --loudness web` (`--production-audio drop` to replace the soundtrack; local track files upload too) | no credits · ~20 s per minute |
-| 9. The session | `doo run session_from_stems --from-job <render job_id> --mix-job <mix job_id> --target logic` (or `ableton`) | no credits · 30–90 s |
+| 9. The session | `doo run session_from_stems --from-job <render job_id> --mix-job <mix job_id> --target logic` (or `ableton`, `reaper`) | no credits · 30–90 s |
 
 `doo cost` / `doseedo_quote` prices step 5 before it runs; stop on `⚠ short`.
 
