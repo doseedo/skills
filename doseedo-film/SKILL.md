@@ -60,32 +60,51 @@ it with the `doo` CLI.
    notes behind it; never the deliverable for a film.
 2. **The cue sheet is a proposal.** It marks where the picture's tension and
    the dialogue allow music. A composer may score one long cue where it
-   proposes three; say what you chose and why.
-3. **Verify from the receipts, then listen.** Every part's `fit.verdict` is
+   proposes three; say what you chose and why. Its cues' energy and
+   `suggested_bpm` are a guess from light and motion; the intensity decides.
+   How much music: an ad, a promo, a trailer or a music video is scored wall
+   to wall (first frame to end card); a dialogue drama is spotted.
+3. **Intensity decides how hard and when; the picture decides what.**
+   `cue_sheet.intensity` is the picture's energy (motion, cutting, camera,
+   sound) in sections `{start_s, end_s, level, rel: low|medium|high|peak}`, and
+   each scene carries its `intensity_rel`. The music changes where it steps:
+   up = drums driving, the full band, louder; down = thinner, quieter or
+   silent. A short film's score (an ad, a promo, a trailer) is ONE piece at
+   one tempo that builds — a step is that piece changing on the frame (drums
+   out or back, a pad or the full band), not a new cue; a new cue only where
+   the music's world changes (the source on screen switched, a hard cut to
+   another time or place, the end card). A rush, shouting or a whip-pan is
+   high however calm the place; a calm band's music (jazz, a crooner) waits
+   until the intensity falls and they play. The loudest music is the peak, or
+   a payoff the intensity rises to (lay it `"duck": false`), and a low
+   section's cue is mastered 10–14 LU under it; an ending that falls low falls
+   with it (a button, a soft chord, or silence over the end card).
+4. **Verify from the receipts, then listen.** Every part's `fit.verdict` is
    `pass` (coverage = the share of its written notes heard); a failed part is
    re-rendered once automatically. A pass is a measurement, not a listen: a
    part can pass and still clip or add hits. Re-take one part with
    `doo render-midi --notes '[…]' --instrument <id> --takes 3` and pick.
-4. **Read the delivery report.** `report.tracks[]` shows where each cue
+5. **Read the delivery report.** `report.tracks[]` shows where each cue
    landed and what was trimmed at the film's edges; `report.duck` how far the
    music sits under the lines; `report.loudness.final` the LUFS and true peak.
    Delivery never limits: `short_of_target_lu` + `why_short` say when the
    peaks stopped the program short; master the mix louder
    (`doo run mix … --target-lufs -14`) if the target matters.
-5. **Hand over paths.** The scored video, the printmaster WAV, the M&E stem,
+6. **Hand over paths.** The scored video, the printmaster WAV, the M&E stem,
    the stems and the project: give the user the local paths, not raw JSON.
-6. **Long jobs need a long timeout** (render 1–4 min): run with a 10-minute
+7. **Long jobs need a long timeout** (render 1–4 min): run with a 10-minute
    tool timeout, or `--no-wait` and `doo wait <task_id> --kind <kind>`.
-7. **Players on screen are the music.** A band, a singer or a DJ seen
+8. **Players on screen are the music.** A band, a singer or a DJ seen
    performing plays THEIR piece: their genre and the instruments in their
-   hands, from the moment they start playing (not on the cut to them; while
-   a band sets up, silence or the band before still playing), through
+   hands, from the moment they start playing (not on the cut to them; earlier
+   only where the intensity rises into their scene; while a band sets up,
+   silence or the music before still playing), through
    cutaways until they are stopped, at ONE tempo (`--fixed-bpm true`) that is
    the performance's (punk 150–180, swing 130–200, house 120–128). Lay that
    cue with `"duck": false` in `score_to_picture`. A genre is a recipe: house
    is a kick on every beat, claps on 2 and 4, off-beat hats and bass, 8-bar
    phrases and a drop that is the loudest moment; nothing outside it.
-8. **A film with its own music**: `doo run analyze_song --audio-url <the
+9. **A film with its own music**: `doo run analyze_song --audio-url <the
    music stem>` → `cues[]`, each piece read on its own (start, `full_at_s`,
    end, bpm, key, level vs the loudest) and the `gaps[]` between. The cut was
    made to those entries, stops and silences: score on them. With more than
