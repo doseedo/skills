@@ -108,7 +108,7 @@ every underlying job and `doo run <job> [--opt v] [file]` runs one directly
   `doo run analyze_midi --notes '[…]' --bpm <tempo> --mode chord`. The notes are
   rendered AS WRITTEN — no snapping. Shell fallback, same request: `doo generate
   --midi part.mid -i <id>` or `curl -X POST
-  https://api.doseedo.com/api/generate-stemphonic -H "X-API-Key: $DOO_API_KEY"
+  https://api.doseedo.com/api/generate -H "X-API-Key: $DOO_API_KEY"
   -F midiFile=@part.mid -F instrument=<id> -F prompt=<id> -F duration=<s>
   -F bpm=<tempo> -F lyrics="[Instrumental]"`.
 - **Several takes come back** for a pitched one-voice MIDI part
