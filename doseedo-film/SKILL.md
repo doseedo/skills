@@ -76,6 +76,20 @@ it with the `doo` CLI.
    the stems and the project: give the user the local paths, not raw JSON.
 6. **Long jobs need a long timeout** (render 1–4 min): run with a 10-minute
    tool timeout, or `--no-wait` and `doo wait <task_id> --kind <kind>`.
+7. **Players on screen are the music.** A band, a singer or a DJ seen
+   performing plays THEIR piece: their genre and the instruments in their
+   hands, from the moment they start playing (not on the cut to them; while
+   a band sets up, silence or the band before still playing), through
+   cutaways until they are stopped, at ONE tempo (`--fixed-bpm true`) that is
+   the performance's (punk 150–180, swing 130–200, house 120–128). Lay that
+   cue with `"duck": false` in `score_to_picture`. A genre is a recipe: house
+   is a kick on every beat, claps on 2 and 4, off-beat hats and bass, 8-bar
+   phrases and a drop that is the loudest moment; nothing outside it.
+8. **A film with its own music**: `doo run analyze_song --audio-url <the
+   music stem>` → `cues[]`, each piece read on its own (start, `full_at_s`,
+   end, bpm, key, level vs the loudest) and the `gaps[]` between. The cut was
+   made to those entries, stops and silences: score on them. With more than
+   one cue, the whole-file bpm and key mean nothing.
 
 ## Verify
 
