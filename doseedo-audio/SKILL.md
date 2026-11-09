@@ -4,7 +4,7 @@ name: doseedo-audio
 description: |
   Separate a mix into stems (with per-stem MIDI), re-perform a song as a
   cover with different instruments, transcribe audio to notes, play the
-  music you write (every part's notes) on 50+ AI instruments or a CUSTOM instrument
+  music you write (every part's notes) on 100+ AI instruments or a CUSTOM instrument
   trained from a recording, timbre transfer, sound design / foley — via
   the `doo` CLI (doseedo). Each job is one command, priced before it runs.
   Use when: "separate this song", "give me the stems / vocals / drums / an

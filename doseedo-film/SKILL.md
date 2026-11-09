@@ -5,7 +5,7 @@ description: |
   Score a film or video as an agent: doseedo watches the cut and hands you
   the cue sheet (every cut frame-exact, shots with keyframes, dialogue,
   proposed cues with SMPTE in/out, hit points and a tempo), lands the hits
-  on downbeats, plays the parts YOU write on 50+ AI instruments (a stem per
+  on downbeats, plays the parts YOU write on 100+ AI instruments (a stem per
   part, each checked against its notes), mixes the cue for the picture and
   lays it on the video, ducked under the dialogue and normalised to a
   delivery loudness, via the `doo` CLI (doseedo). Use when: "score this
