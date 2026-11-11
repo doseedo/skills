@@ -24,6 +24,7 @@ accepts one.
 | `analyze_song` | file or `--audio-url` | — (sync: the result is in the reply) | `key`, `bpm`, `tempo_map`, `meter`, `beats_per_bar`, `downbeats`, `sections`, `chords`, `dynamics` |
 | `detect_chords` | file or `--audio-url`, `--deep false` (CPU detector) | — (sync) | `chord_spans[{chord, start, end, start_beat, end_beat, confidence}]`, `chords{beat: symbol}`, `bpm`, `beat_map` |
 | `beat_grid` | file or `--audio-url` | — (sync) | `bpm`, `beats[]`, `downbeats[]`, `beats_per_bar`, `beat_map` |
+| `identify_sound` | file or `--audio-url` | `want` (instrument, genre, character) (sync) | `instrument`, `family`, `render`, `write`, `candidates[]`, `resembles[]`, `confidence`, `notes`, `genre[]`, `character`, `measured`; `silent` on an empty stem |
 | `analyze_midi` | `--notes '[…]'` + `--bpm`, or `--midi-url`; `--mode midi\|chord`, `--beats-per-segment`, `--min-seg-beats` | — (sync) | `sonorities[]` or `chords[]`, `cover`, `cells`, `compression` |
 | `convert_project` | `--direction <src>2<dst>` (file = the project) | `convert_project` | `file` (zip) |
 | `quote` | `--job`, `--args '{…}'` (render_midi: notes + bpm or duration_seconds, voices, takes) | — | `estimate{generation\|dsp}`, `affordable`, `account` |
@@ -43,7 +44,7 @@ GET  https://api.doseedo.com/api/jobs/<id>?wait=45    → repeat until status is
 ```
 
 A submit reply carries `eta_seconds [low, high]` and `suggested_next_wait`. The synchronous kinds
-(`analyze_song`, `detect_chords`, `beat_grid`, `analyze_midi`) answer `200` with `output` filled — no polling.
+(`analyze_song`, `detect_chords`, `beat_grid`, `identify_sound`, `analyze_midi`) answer `200` with `output` filled — no polling.
 
 Every kind, its input schema, aliases and price: `GET /api/jobs/kinds`; OpenAPI: `GET /api/jobs/openapi.json`.
 **`kind` on a submit must be the exact registry name** (the first column above); an alias such as
