@@ -7,7 +7,7 @@ description: |
   chord guide) with one `doo session` call, or drive the user's sessions
   over the doseedo MCP — read the arrangement, add tracks, write MIDI, load
   the user's own samples into Quick Sampler without uploading, set faders,
-  insert plugins by name, route buses, bounce through real plugin chains,
+  insert plugins by name, route buses, bounce audio tracks to stems,
   download a native project. With Dø Desktop running, edits land in the
   user's Logic project (saved, backed up, reopened). Use when: "open this song in Logic as tracks",
   "build a session from this recording", "make a drum kit from these
@@ -189,9 +189,14 @@ Pro+ send Opus (`audio/ogg`) — or use the local-path ops above.
   `replay.deferred` lists ops the offline build could not synthesize —
   rebuild those with a supported op or accept that they apply on the desktop; don't
   re-export blindly.
-- `doseedo_bounce_session` renders tracks through their real plugin chains
-  (live via Logic, or headless) → poll `doseedo_wait_task kind="bounce"`;
-  `engine` in the result says which. From the shell: `doo bounce --session-id <id>`.
+- `doseedo_bounce_session` renders audio tracks headless on the user's Mac
+  (placed regions + third-party plug-ins; Logic's own plug-ins and instrument
+  tracks only render inside Logic — `plugins_not_rendered` names them) → poll
+  `doseedo_wait_task kind="bounce"`. Save each stem under its `filename` (its
+  `format` may be `opus`). From the shell: `doo bounce --session-id <id>`.
+- `add_device` puts Logic's stock effects into the project; a third-party
+  plug-in by name is reported in `sync.last_apply.skipped` — tell the user to
+  insert it in Logic.
 
 ## Rules
 
