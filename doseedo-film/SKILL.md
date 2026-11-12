@@ -1,5 +1,5 @@
 ---
-version: 0.1.17
+version: 0.1.18
 name: doseedo-film
 description: |
   Score a film or video as an agent: doseedo watches the cut and hands you
@@ -52,7 +52,7 @@ Ableton Live or REAPER session of the whole score.
 | 4. Write the parts | YOU write every part as notes on that beat grid (`[{pitch, start_beats, duration_beats, velocity}]`, beats from bar 1), accents on the hits' beats, thinner under dialogue spans; players from `doo run instruments` (ranges in concert pitch; an unpitched entry's `hit_notes` are the notes to write — a tambourine is 54); a section = one part with `players: N`. Under a voice-over: the full band from bar 1, the body within 4–6 dB, the button 1–1.5 s before the end in a gap in the VO | — |
 | 5. Play them | `doo run render_score --parts "$(cat parts.json)" --tempo-map "$(jq -c .tempo_map tm.json)" --bpm <bpm> --time-signature 3/4` (≤ 32 lines, ≤ 96 player rows, ≤ 600 s; a big score as a file: `--score-key cue.mid` uploads it; drums: the drum model plays a real kit by default; `"drum_engine": "oneshot"` on the part — or for a file's part `--instruments '{"Drums":{"drum_engine":"oneshot"}}'` — is a programmed one-shot kit, for a drum-machine genre only (808, trap, house); an acoustic kit stays on the drum model — boom bap and lo-fi too, a sampled break is a drummer (its dust: `doseedo_mix` style `1990s-hiphop` / `lofi-hiphop`) — and a take that drops a hit is taken again) | 10 credits per 30 s window per 6 parts · 1–4 min |
 | 6. Sound design | `doo sound-design --prompt "heavy door slam in a stone hall" --kind hit` | 10 credits · ~20 s |
-| 7. Mix the cue | `doo run mix --from-job <render job_id> --style <style>` — pick the style for the picture: `cartoon-studio` for animation, `film-orchestral` (default hall) for drama, `film-orchestral-sections` (same hall, wider strings and winds, a fader per section), `film-scoring-stage` for TV / documentary, `film-epic-hybrid` for trailers; `--target-lufs` = the delivery loudness (delivery never limits), `--length-s` cuts it with an end fade | no credits · ~40 s |
+| 7. Mix the cue | `doo run mix --from-job <render job_id> --style <style>` — pick the style for the picture: `cartoon-studio` for animation, `film-orchestral` (default hall) for drama, `film-orchestral-sections` (same hall, wider strings and winds, a fader per section; `--print-sections` = one WAV per section, summing to the mix), `film-scoring-stage` for TV / documentary, `film-epic-hybrid` for trailers; `--target-lufs` = the delivery loudness (delivery never limits), `--length-s` cuts it with an end fade | no credits · ~40 s |
 | 8. On the picture | `doo run score_to_picture --video-key film.mp4 --tracks '[{"audio_url":"<mix_url>","start_timecode":"01:00:11:21","name":"1M1"},{"audio_url":"door.wav","start_timecode":"01:00:15:18","role":"sfx"}]' --loudness web` (`--production-audio drop` to replace the soundtrack; local track files upload too) | no credits · ~20 s per minute |
 | 9. The session | `doo run session_from_stems --from-job <render job_id> --mix-job <mix job_id> --target logic` (or `ableton`, `reaper`) | no credits · 30–90 s |
 
